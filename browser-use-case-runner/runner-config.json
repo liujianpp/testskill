@@ -1,0 +1,8 @@
+{
+  "videoRecording": {
+    "enabled": true,
+    "outputDir": "reports/recordings",
+    "notes": "Default (方式1): no desktop capture; use browser-use screenshot to reports/screenshots/ and cite paths in the Markdown report. When enabled=true, user explicitly wants full-screen external recording (ffmpeg/OBS/manual) — not viewport-native video; browser-use CLI has no built-in record command."
+  },
+  "_readme": "当轮执行配置由 scripts/generate_run_config.py 写入 reports/run-config-<UTC>.json；本文件仅作默认模板（--defaults），勿当作当次唯一真源。"
+}

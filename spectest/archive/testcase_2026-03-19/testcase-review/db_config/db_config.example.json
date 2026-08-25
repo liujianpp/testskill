@@ -1,0 +1,10 @@
+{
+  "_comment": "将此文件复制为 db_config.json 并填写实际连接信息",
+  "type": "mysql",
+  "host": "127.0.0.1",
+  "port": 3306,
+  "user": "root",
+  "password": "your_password",
+  "database": "your_database",
+  "charset": "utf8mb4"
+}

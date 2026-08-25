@@ -1,0 +1,18 @@
+[
+  {
+    "module": "0901父级产品SKU",
+    "feature": "新建",
+    "description": "父级产品SKU运营维护新建child类型SKU，作为测试，我希望操作新建成功和失败，以便清楚程序是否满足需求",
+    "db_tables": [
+      "system_wms_yicang.hpoms_product_combo",
+      "system_wms_yicang.hpoms_product_combo_skus",
+      "system_wms_yicang.hpoms_business_log"
+    ],
+    "table_keywords": ["hpoms_product_combo", "hpoms_product_combo_skus", "hpoms_business_log"],
+    "tech_stack": "前端vue, 后端springboot",
+    "related_api": "/business/business/productparent/save",
+    "business_rules": "1、父级combo唯一性校验，父级下SKU已存在绑定限制绑定，新建成功或失败调用存储业务操作日志\n2、新建SKU不存在绑定父级SKU保存成功\n3、新建SKU已存在绑定父级SKU保存失败\n4、新建已存在重复父级SKU保存失败\n5、新建成功增加业务操作日志",
+    "priority_hint": "",
+    "feature_key": "0901父级产品SKU/新建"
+  }
+]

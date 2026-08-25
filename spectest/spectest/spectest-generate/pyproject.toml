@@ -1,0 +1,13 @@
+[project]
+name = "spectest-generate"
+version = "1.1.0"
+description = "SpecTest 测试用例生成技能"
+requires-python = ">=3.10"
+dependencies = [
+    "openpyxl",
+    "pymysql",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

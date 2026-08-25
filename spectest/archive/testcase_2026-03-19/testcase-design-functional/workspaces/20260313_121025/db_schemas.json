@@ -1,0 +1,1778 @@
+{
+  "hpoms_product_combo_sku_attributes": {
+    "database": "oms_system_wms_yicang",
+    "columns": [
+      {
+        "column_name": "id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "PRI",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "product_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "商品ID"
+      },
+      {
+        "column_name": "combo_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "销售SKU ID;"
+      },
+      {
+        "column_name": "combo_sku",
+        "column_type": "varchar(100)",
+        "is_nullable": "YES",
+        "column_key": "MUL",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "SKU"
+      },
+      {
+        "column_name": "attribute_key",
+        "column_type": "varchar(100)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "属性key"
+      },
+      {
+        "column_name": "value",
+        "column_type": "text",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "属性值"
+      },
+      {
+        "column_name": "status",
+        "column_type": "smallint",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "记录状态：1启用 2禁用 3删除"
+      },
+      {
+        "column_name": "version",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "乐观锁"
+      },
+      {
+        "column_name": "created_by",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "创建人"
+      },
+      {
+        "column_name": "created_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "创建时间;"
+      },
+      {
+        "column_name": "updated_by",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "更新人"
+      },
+      {
+        "column_name": "updated_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "更新时间"
+      }
+    ],
+    "column_count": 12
+  },
+  "hpoms_business_log": {
+    "database": "oms_system_wms_yicang",
+    "columns": [
+      {
+        "column_name": "id",
+        "column_type": "bigint",
+        "is_nullable": "NO",
+        "column_key": "PRI",
+        "column_default": null,
+        "extra": "auto_increment",
+        "column_comment": "主键"
+      },
+      {
+        "column_name": "business_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "MUL",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "业务Id"
+      },
+      {
+        "column_name": "business_type",
+        "column_type": "tinyint",
+        "is_nullable": "YES",
+        "column_key": "MUL",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "业务类型 1：转移单 2:平台产品配置 3：父级产品SKU 4：产品组合SKU 5:平台产品定价"
+      },
+      {
+        "column_name": "operation_type",
+        "column_type": "tinyint",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "操作类型;1：新增 5：编辑 10：审核 15：撤销 20：删除 25：导出 30：导入 35：完成"
+      },
+      {
+        "column_name": "content",
+        "column_type": "tinytext",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "内容"
+      },
+      {
+        "column_name": "remark",
+        "column_type": "text",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "备注"
+      },
+      {
+        "column_name": "status",
+        "column_type": "tinyint",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": "1",
+        "extra": "",
+        "column_comment": "记录状态：1启用 2禁用 3删除"
+      },
+      {
+        "column_name": "version",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "乐观锁"
+      },
+      {
+        "column_name": "created_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "创建时间"
+      },
+      {
+        "column_name": "created_by",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "创建人"
+      },
+      {
+        "column_name": "updated_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "修改时间"
+      },
+      {
+        "column_name": "updated_by",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "更新人"
+      }
+    ],
+    "column_count": 12
+  },
+  "hpoms_product_combo": {
+    "database": "postage_system_test",
+    "columns": [
+      {
+        "column_name": "id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "PRI",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "combo_sku",
+        "column_type": "varchar(50)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "combo_type",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "ean",
+        "column_type": "varchar(50)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "barcode",
+        "column_type": "varchar(50)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "status",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "created_at",
+        "column_type": "datetime(6)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "updated_at",
+        "column_type": "datetime(6)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "product_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "sales_type",
+        "column_type": "int",
+        "is_nullable": "NO",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "title",
+        "column_type": "varchar(255)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      }
+    ],
+    "column_count": 11
+  },
+  "hpoms_view_product_combo_query": {
+    "database": "oms_system_wms_yicang",
+    "columns": [
+      {
+        "column_name": "id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "product_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "产品ID"
+      },
+      {
+        "column_name": "sales_type",
+        "column_type": "int",
+        "is_nullable": "NO",
+        "column_key": "",
+        "column_default": "1",
+        "extra": "",
+        "column_comment": "销售类型：1combo，2parent"
+      },
+      {
+        "column_name": "combo_sku",
+        "column_type": "varchar(50)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "combo SKU名"
+      },
+      {
+        "column_name": "combo_sku_sn",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": "1",
+        "extra": "",
+        "column_comment": "销售SKU版本号"
+      },
+      {
+        "column_name": "source_combo_sku",
+        "column_type": "varchar(50)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "来源combo sku"
+      },
+      {
+        "column_name": "source_type",
+        "column_type": "tinyint",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": "1",
+        "extra": "",
+        "column_comment": "数据来源: 1ERP 2.API"
+      },
+      {
+        "column_name": "owner_user_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "货主用户ID"
+      },
+      {
+        "column_name": "flow_status",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "审核状态：1是草稿，2审核中，3通过，4拒绝"
+      },
+      {
+        "column_name": "flow_by",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "审核人"
+      },
+      {
+        "column_name": "flow_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "审核时间"
+      },
+      {
+        "column_name": "reject_reason",
+        "column_type": "varchar(255)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "创建人"
+      },
+      {
+        "column_name": "title",
+        "column_type": "varchar(255)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "产品标题"
+      },
+      {
+        "column_name": "sub_title",
+        "column_type": "varchar(255)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "子标题"
+      },
+      {
+        "column_name": "combo_type",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "类型：1 single, 2combo, 3AB件, 4替代, 5child, 6kit, 7part"
+      },
+      {
+        "column_name": "ean",
+        "column_type": "varchar(50)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "EAN"
+      },
+      {
+        "column_name": "barcode",
+        "column_type": "varchar(50)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "条码"
+      },
+      {
+        "column_name": "status",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "状态：1启用，2禁用，3删除"
+      },
+      {
+        "column_name": "version",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "乐观锁"
+      },
+      {
+        "column_name": "created_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "created_by",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "创建人"
+      },
+      {
+        "column_name": "updated_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "updated_by",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "更新人"
+      },
+      {
+        "column_name": "warehouse_owner_code",
+        "column_type": "text",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "distribution_owner_code",
+        "column_type": "text",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      }
+    ],
+    "column_count": 25
+  },
+  "hpoms_product_combo_stock_recalc_apply": {
+    "database": "oms_system_wms_yicang",
+    "columns": [
+      {
+        "column_name": "id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "PRI",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "combo_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "MUL",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "combo_sku",
+        "column_type": "varchar(50)",
+        "is_nullable": "YES",
+        "column_key": "MUL",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "销售SKU编码"
+      },
+      {
+        "column_name": "before_real_number",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "重算前库存"
+      },
+      {
+        "column_name": "inventory_external_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "对外库存ID"
+      },
+      {
+        "column_name": "after_real_number",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "重算后库存"
+      },
+      {
+        "column_name": "change_number",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "库存变化量"
+      },
+      {
+        "column_name": "recalc_status",
+        "column_type": "tinyint",
+        "is_nullable": "YES",
+        "column_key": "MUL",
+        "column_default": "2",
+        "extra": "",
+        "column_comment": "1:已重算 2:待重算"
+      },
+      {
+        "column_name": "recalc_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "重算时间"
+      },
+      {
+        "column_name": "recalc_snap",
+        "column_type": "json",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "重算快照"
+      },
+      {
+        "column_name": "status",
+        "column_type": "tinyint",
+        "is_nullable": "NO",
+        "column_key": "",
+        "column_default": "1",
+        "extra": "",
+        "column_comment": "记录状态：1启用 2禁用 3删除"
+      },
+      {
+        "column_name": "version",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "乐观锁"
+      },
+      {
+        "column_name": "updated_by",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "更新人"
+      },
+      {
+        "column_name": "created_by",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "创建人"
+      },
+      {
+        "column_name": "created_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "updated_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      }
+    ],
+    "column_count": 16
+  },
+  "hpoms_product_combo_stock_change": {
+    "database": "oms_system_wms_yicang",
+    "columns": [
+      {
+        "column_name": "id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "PRI",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "combo_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "MUL",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "combo_sku",
+        "column_type": "varchar(50)",
+        "is_nullable": "YES",
+        "column_key": "MUL",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "销售SKU编码"
+      },
+      {
+        "column_name": "real_number",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "真实库存"
+      },
+      {
+        "column_name": "change_status",
+        "column_type": "tinyint",
+        "is_nullable": "YES",
+        "column_key": "MUL",
+        "column_default": "0",
+        "extra": "",
+        "column_comment": "0:新建 1:已处理"
+      },
+      {
+        "column_name": "created_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "updated_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      }
+    ],
+    "column_count": 7
+  },
+  "oms_sale_product_combo_sku_form_oms": {
+    "database": "test_postage_service_test",
+    "columns": [
+      {
+        "column_name": "data_id",
+        "column_type": "varchar(64)",
+        "is_nullable": "NO",
+        "column_key": "UNI",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "id",
+        "column_type": "bigint",
+        "is_nullable": "NO",
+        "column_key": "PRI",
+        "column_default": null,
+        "extra": "auto_increment",
+        "column_comment": ""
+      },
+      {
+        "column_name": "synced_version",
+        "column_type": "int",
+        "is_nullable": "NO",
+        "column_key": "MUL",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "synced_at",
+        "column_type": "datetime(6)",
+        "is_nullable": "NO",
+        "column_key": "MUL",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "combo_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "sku",
+        "column_type": "varchar(50)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "sku_sn",
+        "column_type": "varchar(10)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "quantity",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "sort",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "status",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "created_at",
+        "column_type": "datetime(6)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "oms_id",
+        "column_type": "varchar(255)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "combo_fk_id",
+        "column_type": "varchar(64)",
+        "is_nullable": "YES",
+        "column_key": "MUL",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "purchase_sku_fk_id",
+        "column_type": "varchar(64)",
+        "is_nullable": "YES",
+        "column_key": "MUL",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      }
+    ],
+    "column_count": 14
+  },
+  "oms_sale_product_combo": {
+    "database": "test_postage_service_test",
+    "columns": [
+      {
+        "column_name": "data_id",
+        "column_type": "varchar(64)",
+        "is_nullable": "NO",
+        "column_key": "UNI",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "id",
+        "column_type": "bigint",
+        "is_nullable": "NO",
+        "column_key": "PRI",
+        "column_default": null,
+        "extra": "auto_increment",
+        "column_comment": ""
+      },
+      {
+        "column_name": "synced_version",
+        "column_type": "int",
+        "is_nullable": "NO",
+        "column_key": "MUL",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "synced_at",
+        "column_type": "datetime(6)",
+        "is_nullable": "NO",
+        "column_key": "MUL",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "product_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "sales_type",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "combo_sku",
+        "column_type": "varchar(50)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "title",
+        "column_type": "varchar(255)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "sub_title",
+        "column_type": "varchar(255)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "combo_type",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "ean",
+        "column_type": "varchar(50)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "barcode",
+        "column_type": "varchar(50)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "status",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "created_at",
+        "column_type": "datetime(6)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "updated_at",
+        "column_type": "datetime(6)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "oms_id",
+        "column_type": "varchar(255)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      }
+    ],
+    "column_count": 16
+  },
+  "hpoms_product_combo_sku_detail": {
+    "database": "oms_system_wms_yicang",
+    "columns": [
+      {
+        "column_name": "id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "PRI",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "主键;"
+      },
+      {
+        "column_name": "product_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "商品ID;"
+      },
+      {
+        "column_name": "combo_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "销售SKU ID;"
+      },
+      {
+        "column_name": "combo_sku",
+        "column_type": "varchar(100)",
+        "is_nullable": "NO",
+        "column_key": "MUL",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "sku编码;"
+      },
+      {
+        "column_name": "brand_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "品牌ID"
+      },
+      {
+        "column_name": "sort_desc",
+        "column_type": "varchar(255)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "简述"
+      },
+      {
+        "column_name": "description",
+        "column_type": "text",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "描述"
+      },
+      {
+        "column_name": "feature",
+        "column_type": "text",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "特征"
+      },
+      {
+        "column_name": "pack_content",
+        "column_type": "text",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "包装内容"
+      },
+      {
+        "column_name": "specifications",
+        "column_type": "text",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "规格"
+      },
+      {
+        "column_name": "status",
+        "column_type": "tinyint",
+        "is_nullable": "NO",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "记录状态：1启用 2禁用 3删除"
+      },
+      {
+        "column_name": "version",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "乐观锁"
+      },
+      {
+        "column_name": "created_by",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "创建人"
+      },
+      {
+        "column_name": "created_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "创建时间;"
+      },
+      {
+        "column_name": "updated_by",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "更新人"
+      },
+      {
+        "column_name": "updated_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "更新时间"
+      }
+    ],
+    "column_count": 16
+  },
+  "hpoms_product_combo_sku_price": {
+    "database": "oms_system_wms_yicang",
+    "columns": [
+      {
+        "column_name": "id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "PRI",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "主键;"
+      },
+      {
+        "column_name": "product_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "商品ID;"
+      },
+      {
+        "column_name": "combo_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "销售SKU ID;"
+      },
+      {
+        "column_name": "combo_sku",
+        "column_type": "varchar(100)",
+        "is_nullable": "NO",
+        "column_key": "MUL",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "销售SKU"
+      },
+      {
+        "column_name": "cost_price",
+        "column_type": "double(10,3)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "成本价"
+      },
+      {
+        "column_name": "unit_price",
+        "column_type": "double(10,3)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "销售价格"
+      },
+      {
+        "column_name": "rrp",
+        "column_type": "double(10,3)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "建议零售价"
+      },
+      {
+        "column_name": "version",
+        "column_type": "int",
+        "is_nullable": "NO",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "版本号"
+      },
+      {
+        "column_name": "status",
+        "column_type": "smallint",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "记录状态：1启用 2禁用 3删除"
+      },
+      {
+        "column_name": "created_by",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "创建人"
+      },
+      {
+        "column_name": "created_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "创建时间;"
+      },
+      {
+        "column_name": "updated_by",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "更新人"
+      },
+      {
+        "column_name": "updated_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "更新时间"
+      }
+    ],
+    "column_count": 13
+  },
+  "hpoms_platform_product_combo_sku_attributes": {
+    "database": "oms_system_wms_yicang",
+    "columns": [
+      {
+        "column_name": "id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "PRI",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "pcs_detail_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "平台销售SKU详情 ID"
+      },
+      {
+        "column_name": "product_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "商品ID"
+      },
+      {
+        "column_name": "combo_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "销售SKU ID;"
+      },
+      {
+        "column_name": "combo_sku",
+        "column_type": "varchar(100)",
+        "is_nullable": "YES",
+        "column_key": "MUL",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "SKU"
+      },
+      {
+        "column_name": "attribute_key",
+        "column_type": "varchar(100)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "属性key"
+      },
+      {
+        "column_name": "value",
+        "column_type": "text",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "属性值"
+      },
+      {
+        "column_name": "status",
+        "column_type": "smallint",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "记录状态：1启用 2禁用 3删除"
+      },
+      {
+        "column_name": "version",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "乐观锁"
+      },
+      {
+        "column_name": "created_by",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "创建人"
+      },
+      {
+        "column_name": "created_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "创建时间;"
+      },
+      {
+        "column_name": "updated_by",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "更新人"
+      },
+      {
+        "column_name": "updated_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "更新时间"
+      }
+    ],
+    "column_count": 13
+  },
+  "product": {
+    "database": "postage_plus_test",
+    "columns": [
+      {
+        "column_name": "id",
+        "column_type": "bigint",
+        "is_nullable": "NO",
+        "column_key": "PRI",
+        "column_default": null,
+        "extra": "auto_increment",
+        "column_comment": ""
+      },
+      {
+        "column_name": "status",
+        "column_type": "int",
+        "is_nullable": "NO",
+        "column_key": "",
+        "column_default": "1",
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "code",
+        "column_type": "varchar(191)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "name",
+        "column_type": "varchar(191)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "label",
+        "column_type": "varchar(191)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "remark",
+        "column_type": "varchar(191)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "created_at",
+        "column_type": "datetime(3)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": "CURRENT_TIMESTAMP(3)",
+        "extra": "DEFAULT_GENERATED",
+        "column_comment": ""
+      },
+      {
+        "column_name": "updated_at",
+        "column_type": "datetime(3)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "weight",
+        "column_type": "double",
+        "is_nullable": "NO",
+        "column_key": "",
+        "column_default": "0",
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "length",
+        "column_type": "double",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "width",
+        "column_type": "double",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "height",
+        "column_type": "double",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "qty",
+        "column_type": "double",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": "1",
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "order_code",
+        "column_type": "varchar(191)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      }
+    ],
+    "column_count": 14
+  },
+  "hpoms_scp_business_log": {
+    "database": "oms_system_dev",
+    "columns": [
+      {
+        "column_name": "id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "PRI",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "主键ID"
+      },
+      {
+        "column_name": "type",
+        "column_type": "tinyint",
+        "is_nullable": "NO",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "日志类型"
+      },
+      {
+        "column_name": "business_module",
+        "column_type": "varchar(50)",
+        "is_nullable": "NO",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "业务模块编码 业务模块编码，如：\r\n        OUTBOUND_CONFIG"
+      },
+      {
+        "column_name": "business_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "MUL",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "业务主键ID"
+      },
+      {
+        "column_name": "content",
+        "column_type": "text",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "内容"
+      },
+      {
+        "column_name": "status",
+        "column_type": "tinyint",
+        "is_nullable": "NO",
+        "column_key": "",
+        "column_default": "1",
+        "extra": "",
+        "column_comment": "状态 状态：1-启用，2-禁用，3-删除"
+      },
+      {
+        "column_name": "version",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "乐观锁"
+      },
+      {
+        "column_name": "created_by",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "创建人"
+      },
+      {
+        "column_name": "created_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": "CURRENT_TIMESTAMP",
+        "extra": "DEFAULT_GENERATED",
+        "column_comment": "创建时间"
+      },
+      {
+        "column_name": "updated_by",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": "更新人"
+      },
+      {
+        "column_name": "updated_at",
+        "column_type": "timestamp",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": "CURRENT_TIMESTAMP",
+        "extra": "DEFAULT_GENERATED",
+        "column_comment": "更新时间"
+      }
+    ],
+    "column_count": 11
+  },
+  "hpoms_product_combo_skus": {
+    "database": "postage_system_test",
+    "columns": [
+      {
+        "column_name": "id",
+        "column_type": "varchar(24)",
+        "is_nullable": "NO",
+        "column_key": "PRI",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "combo_id",
+        "column_type": "varchar(24)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "sku",
+        "column_type": "varchar(50)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "sku_sn",
+        "column_type": "varchar(10)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "quantity",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "sort",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "status",
+        "column_type": "int",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      },
+      {
+        "column_name": "created_at",
+        "column_type": "datetime(6)",
+        "is_nullable": "YES",
+        "column_key": "",
+        "column_default": null,
+        "extra": "",
+        "column_comment": ""
+      }
+    ],
+    "column_count": 8
+  }
+}

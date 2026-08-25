@@ -1,0 +1,30 @@
+[
+  {
+    "project": "",
+    "module": "地址管理",
+    "feature": "地址验证",
+    "test_item": "负向 - postcode 为空字符串",
+    "title": "postcode 传空字符串时 success 返回 false",
+    "preconditions": "服务正常运行",
+    "db_tables": "lsp_dev.lsp_address_suburb_postcode",
+    "test_data": "{\"country\":\"AU\",\"state\":\"NSW\",\"postcode\":\"\",\"suburb\":\"north wollongong\",\"address\":\"10 Park Ave\"}",
+    "steps": "1. POST /address/validate\n2. Body: postcode 传空字符串 \"\"\n3. 查看响应",
+    "expected_result": "HTTP 200；data.success=false（postcode 为空无法在数据库匹配）；系统不崩溃",
+    "validation_sql": "SELECT COUNT(*) FROM lsp_dev.lsp_address_suburb_postcode WHERE postcode='' AND country_code='AU' AND state_code='NSW';",
+    "actual_result": "",
+    "is_passed": "",
+    "estimated_hours": "0.5",
+    "execute_date": "",
+    "test_progress": "",
+    "case_type": "API测试",
+    "priority": "P1",
+    "is_regression": "是",
+    "is_blocker": "否",
+    "requirement_id": "",
+    "api_url": "POST /address/validate",
+    "bug_count": "0",
+    "bug_unresolved": "0",
+    "case_version": "1",
+    "test_type": "负向"
+  }
+]

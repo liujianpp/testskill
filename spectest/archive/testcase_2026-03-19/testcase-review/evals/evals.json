@@ -1,0 +1,47 @@
+{
+  "skill_name": "testcase-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我有一份电商系统的测试用例文件在 /tmp/sample_testcases.xlsx，里面是登录模块和购物车模块的测试用例，帮我评审一下这些测试用例质量怎么样，有没有问题",
+      "expected_output": "技能被触发，询问需求文档等可选文件，执行setup_env.py初始化环境，调用reader.py解析Excel，然后启动3个并行worker进行评审，最终生成带评审意见列的Excel文件到output目录，并汇报统计信息",
+      "files": [],
+      "assertions": [
+        "技能正确触发并开始执行评审流程",
+        "成功调用reader.py解析测试用例",
+        "启动了3个并行评审Worker",
+        "输出文件名包含时间戳（格式如_reviewed_20260311_）",
+        "输出到output目录",
+        "汇报了总用例数、有问题数、通过数的统计"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "帮我做测试用例评审，测试用例路径是 /tmp/api_testcases.csv，需求文档是 /tmp/requirements.md，数据库用我们内网的测试mysql（192.168.1.31:13306），用例里面涉及到 user_order 和 product_sku 两张表",
+      "expected_output": "技能被触发，将文件复制到对应目录，解析CSV格式测试用例，连接数据库获取user_order和product_sku的表结构，结合需求文档内容进行评审，生成带评审意见的报告文件",
+      "files": [],
+      "assertions": [
+        "技能正确触发",
+        "CSV文件被复制到testcase目录",
+        "需求文档被复制到project_info目录",
+        "尝试获取user_order和product_sku表的数据库结构",
+        "评审意见结合了需求文档内容",
+        "输出报告文件存在于output目录"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "测试用例评审，文件在 /tmp/payment_cases.xlsx，同时提供了业务逻辑文档 /tmp/payment_business.md 和API文档 /tmp/payment_api.md。这是支付模块的测试用例，要求对每个用例给出详细评审意见",
+      "expected_output": "技能被触发，加载业务文档和API文档作为评审上下文，分批并行评审所有支付模块测试用例，评审意见结合了业务逻辑和API文档内容，对有问题的用例给出具体可操作的改进建议，质量好的用例评审意见留空，最终输出Excel报告",
+      "files": [],
+      "assertions": [
+        "技能正确触发",
+        "业务文档和API文档被成功加载到评审上下文",
+        "评审意见具体且可操作（不是泛泛而谈）",
+        "质量好的测试用例评审意见为空",
+        "问题严重程度有标注（如[严重]、[一般]、[建议]）",
+        "输出文件名包含时间戳"
+      ]
+    }
+  ]
+}

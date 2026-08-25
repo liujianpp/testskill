@@ -1,0 +1,129 @@
+{
+  "columns": [
+    {
+      "key": "project",
+      "name": "系统/项目",
+      "width": 12
+    },
+    {
+      "key": "module",
+      "name": "模块",
+      "width": 15
+    },
+    {
+      "key": "feature",
+      "name": "功能",
+      "width": 15
+    },
+    {
+      "key": "test_item",
+      "name": "测试项",
+      "width": 25
+    },
+    {
+      "key": "title",
+      "name": "用例标题",
+      "width": 30
+    },
+    {
+      "key": "preconditions",
+      "name": "前置条件",
+      "width": 30
+    },
+    {
+      "key": "db_tables",
+      "name": "涉及到数据库表",
+      "width": 20
+    },
+    {
+      "key": "test_data",
+      "name": "测试数据",
+      "width": 35
+    },
+    {
+      "key": "steps",
+      "name": "测试步骤",
+      "width": 55
+    },
+    {
+      "key": "expected_result",
+      "name": "预期结果",
+      "width": 55
+    },
+    {
+      "key": "validation_sql",
+      "name": "验证SQL",
+      "width": 60
+    },
+    {
+      "key": "actual_result",
+      "name": "实际结果",
+      "width": 20
+    },
+    {
+      "key": "is_passed",
+      "name": "是否通过",
+      "width": 10
+    },
+    {
+      "key": "estimated_hours",
+      "name": "预计工时(h)",
+      "width": 12
+    },
+    {
+      "key": "execute_date",
+      "name": "执行时间(年月日)",
+      "width": 15
+    },
+    {
+      "key": "test_progress",
+      "name": "测试进度(%)",
+      "width": 12
+    },
+    {
+      "key": "case_type",
+      "name": "用例类型",
+      "width": 10
+    },
+    {
+      "key": "priority",
+      "name": "用例优先级",
+      "width": 8
+    },
+    {
+      "key": "is_regression",
+      "name": "是否回归用例",
+      "width": 12
+    },
+    {
+      "key": "is_blocker",
+      "name": "是否阻塞上线",
+      "width": 12
+    },
+    {
+      "key": "requirement_id",
+      "name": "关联需求ID",
+      "width": 15
+    },
+    {
+      "key": "api_url",
+      "name": "API URL",
+      "width": 25
+    },
+    {
+      "key": "bug_count",
+      "name": "BUG数",
+      "width": 8
+    },
+    {
+      "key": "bug_unresolved",
+      "name": "BUG未解决数",
+      "width": 10
+    },
+    {
+      "key": "case_version",
+      "name": "用例版本",
+      "width": 10
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+# Python 缓存与虚拟环境
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# 运行时产物
+reports/
+allure-results/
+allure-report/
+*.log
+*.stackdump
+
+# 系统文件
+Thumbs.db
+.DS_Store
+._*
+.__*
+.AppleDouble/
+__MACOSX/
+
+# IDE
+.idea/
+.vscode/

@@ -1,0 +1,2265 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "默认模块",
+    "description": "Lsp Backend API Documentation",
+    "version": "1.0"
+  },
+  "tags": [
+    {
+      "name": "address-controller"
+    },
+    {
+      "name": "carrier-controller"
+    },
+    {
+      "name": "carrier-strategy-controller"
+    },
+    {
+      "name": "warehouse-controller"
+    }
+  ],
+  "paths": {
+    "/address/import_region": {
+      "post": {
+        "summary": "批量导入地址信息",
+        "deprecated": false,
+        "description": "功能描述：批量导入地址信息\n涉及数据库表：lsp_dev.lsp_address_suburb",
+        "operationId": "importRegionUsingPOST",
+        "tags": [
+          "address-controller"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "description": "file",
+                    "format": "binary",
+                    "example": ""
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              },
+              "examples": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/address/search": {
+      "post": {
+        "summary": "地址搜索",
+        "deprecated": false,
+        "description": "功能描述：地址搜索\n涉及数据库表：lsp_dev.lsp_address_suburb",
+        "operationId": "addressSearchUsingPOST",
+        "tags": [
+          "address-controller"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PagesDto"
+              },
+              "examples": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/address/validate": {
+      "post": {
+        "summary": "地址验证",
+        "deprecated": false,
+        "description": "功能描述：校验订单地址邮筒(pobox)及有效性\n涉及数据库表：lsp_dev.lsp_address_suburb\n\n请求的传参：\ncountry：兼容简写和全称，例如AU和Australia\nstate：兼容简写和全称\nsuburb：兼容大小写\n\n返回的参数校验：\nsuccess：检查country+state+postcode+suburb是否存在，则返回为true 反之为 false找不到地址\nisPoBox：通过正则表达式判断，address和address2任一字段满足正则表达式在则返回为true，反之为false\n\nisPoBox正则表达式：\n(pob\\\\b|\\\\bpobox\\\\b|\\\\bpo\\\\b.*(?:\\\\w\\\\s)?\\\\bbox\\\\b|gpo\\\\b|gpobox\\\\b|\\\\b(P(\\\\s|\\\\.)*?O(\\\\s|\\\\.)|PO)\\\\s*?Box\\\\b|Parcel\\\\s*(Locker|Collect)|\\\\bP(\\\\.|\\\\s)+Locker\\\\b|\\\\bpostal\\\\s+locker\\\\b|\\\\bPost\\\\s*?(Box|Shop|Office)\\\\b|\\\\bLPO\\\\b|\\\\b(Box|RMB|PMB)\\\\s*?\\\\d+\\\\b|\\\\bco\\\\s+Po\\\\b)",
+        "operationId": "validateUsingPOST",
+        "tags": [
+          "address-controller"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/%E5%9C%B0%E5%9D%80%E9%AA%8C%E8%AF%81%E8%AF%B7%E6%B1%82DTO"
+              },
+              "examples": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult%C2%AB%E5%9C%B0%E5%9D%80%E6%A3%80%E9%AA%8C%E5%93%8D%E5%BA%94%C2%BB"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/address/validate_many": {
+      "post": {
+        "summary": "批量地址验证",
+        "deprecated": false,
+        "description": "功能描述：校验订单地址邮筒(pobox)及有效性\n涉及数据库表：lsp_dev.lsp_address_suburb\n\n请求的传参：\ncountry：兼容简写和全称，例如AU和Australia\nstate：兼容简写和全称\nsuburb：兼容大小写\n\n返回的参数校验：\nsuccess：检查country+state+postcode+suburb是否存在，则返回为true 反之为 false找不到地址\nisPoBox：通过正则表达式判断，数组中任一对象的address和address2的任一字段满足正则表达式在则返回为true，反之为false\n\nisPoBox正则表达式：\n(pob\\\\b|\\\\bpobox\\\\b|\\\\bpo\\\\b.*(?:\\\\w\\\\s)?\\\\bbox\\\\b|gpo\\\\b|gpobox\\\\b|\\\\b(P(\\\\s|\\\\.)*?O(\\\\s|\\\\.)|PO)\\\\s*?Box\\\\b|Parcel\\\\s*(Locker|Collect)|\\\\bP(\\\\.|\\\\s)+Locker\\\\b|\\\\bpostal\\\\s+locker\\\\b|\\\\bPost\\\\s*?(Box|Shop|Office)\\\\b|\\\\bLPO\\\\b|\\\\b(Box|RMB|PMB)\\\\s*?\\\\d+\\\\b|\\\\bco\\\\s+Po\\\\b)",
+        "operationId": "validateManyUsingPOST",
+        "tags": [
+          "address-controller"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/%E6%89%B9%E9%87%8F%E5%9C%B0%E5%9D%80%E9%AA%8C%E8%AF%81%E8%AF%B7%E6%B1%82DTO"
+              },
+              "examples": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult%C2%ABList%C2%AB%E5%9C%B0%E5%9D%80%E6%A3%80%E9%AA%8C%E5%93%8D%E5%BA%94%C2%BB%C2%BB"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/carrier/get": {
+      "post": {
+        "summary": "id获取承运商服务明细",
+        "deprecated": false,
+        "description": "",
+        "operationId": "getCarrierByIdUsingPOST",
+        "tags": [
+          "carrier-controller"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult%C2%ABCarrierInfoPojo%C2%BB"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/carrier/import": {
+      "post": {
+        "summary": "导入承运商配置档案",
+        "deprecated": false,
+        "description": "",
+        "operationId": "importCarrierUsingPOST",
+        "tags": [
+          "carrier-controller"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "description": "file",
+                    "format": "binary",
+                    "example": ""
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/carrier/import_rate": {
+      "post": {
+        "summary": "导入承运商 Rate 计算配置",
+        "deprecated": false,
+        "description": "",
+        "operationId": "importCarrierRateUsingPOST",
+        "tags": [
+          "carrier-controller"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "description": "file",
+                    "format": "binary",
+                    "example": ""
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/carrier/list": {
+      "post": {
+        "summary": "查询承运商渠道列表",
+        "deprecated": false,
+        "description": "",
+        "operationId": "listUsingPOST",
+        "tags": [
+          "carrier-controller"
+        ],
+        "parameters": [
+          {
+            "name": "keywords",
+            "in": "query",
+            "description": "keywords",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult%C2%ABList%C2%ABCarrier%C2%BB%C2%BB"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/carrier/listByOwnerId": {
+      "post": {
+        "summary": "根据货主id查询承运商渠道列表",
+        "deprecated": false,
+        "description": "",
+        "operationId": "listByOwnerIdUsingPOST",
+        "tags": [
+          "carrier-controller"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/%E6%9F%A5%E8%AF%A2%E8%B4%A7%E4%B8%BB%E6%89%BF%E8%BF%90%E5%95%86%E6%9F%A5%E8%AF%A2%E4%BC%A0%E5%8F%82"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult%C2%ABList%C2%ABOwnerCarrierVo%C2%BB%C2%BB"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/carrier/list_all": {
+      "post": {
+        "summary": "承运商列表",
+        "deprecated": false,
+        "description": "",
+        "operationId": "listAllCarrierUsingPOST",
+        "tags": [
+          "carrier-controller"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult%C2%ABList%C2%ABCarrierVo%C2%BB%C2%BB"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/carrier/push_to_wms": {
+      "post": {
+        "summary": "单个推送 Carrier 到 WMS",
+        "deprecated": false,
+        "description": "",
+        "operationId": "pushCarrierToWmsUsingPOST",
+        "tags": [
+          "carrier-controller"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CarrierPushToWmsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/carrier/push_to_wms/all": {
+      "post": {
+        "summary": "推送 可用 Carrier 到 WMS",
+        "deprecated": false,
+        "description": "",
+        "operationId": "pushCarrierToWmsAllUsingPOST",
+        "tags": [
+          "carrier-controller"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/carrier/strategy/list_all": {
+      "post": {
+        "summary": "承运商策略列表",
+        "deprecated": false,
+        "description": "",
+        "operationId": "listAllCarrierStrategyUsingPOST",
+        "tags": [
+          "carrier-controller"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenListCarrierStrategyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult%C2%ABList%C2%ABOpenListCarrierStrategyVoItem%C2%BB%C2%BB"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/carrier/strategy/list_to_erp": {
+      "post": {
+        "summary": "ERP 指定承运商策略列表",
+        "deprecated": false,
+        "description": "",
+        "operationId": "listErpCarrierStrategyUsingPOST",
+        "tags": [
+          "carrier-controller"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CarrierStrategyListToErpDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult%C2%ABList%C2%ABOpenListCarrierStrategyVoItem%C2%BB%C2%BB"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/carrier/update_refs": {
+      "post": {
+        "summary": "更新策略配置",
+        "deprecated": false,
+        "description": "",
+        "operationId": "updateRefsUsingPOST",
+        "tags": [
+          "carrier-controller"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/%E6%9B%B4%E6%96%B0%E7%89%A9%E6%B5%81%E5%8F%91%E8%BF%90%E7%AD%96%E7%95%A5%E9%85%8D%E7%BD%AE%20Dto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/strategy/add": {
+      "post": {
+        "summary": "新增承运商策略",
+        "deprecated": false,
+        "description": "",
+        "operationId": "addUsingPOST",
+        "tags": [
+          "carrier-strategy-controller"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CarrierStrategyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult%C2%ABCarrierStrategyVo%C2%BB"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/strategy/available_warehouse": {
+      "post": {
+        "summary": "根据策略获取可用仓库列表",
+        "deprecated": false,
+        "description": "",
+        "operationId": "availableWarehouseUsingPOST",
+        "tags": [
+          "carrier-strategy-controller"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StrategyAvailableWarehouseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/strategy/disable": {
+      "post": {
+        "summary": "停用承运商渠道策略",
+        "deprecated": false,
+        "description": "",
+        "operationId": "disableUsingPOST",
+        "tags": [
+          "carrier-strategy-controller"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult%C2%ABVoid%C2%BB"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/strategy/enable": {
+      "post": {
+        "summary": "启用承运商渠道策略",
+        "deprecated": false,
+        "description": "",
+        "operationId": "enableUsingPOST",
+        "tags": [
+          "carrier-strategy-controller"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult%C2%ABVoid%C2%BB"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/strategy/list": {
+      "post": {
+        "summary": "分页查询策略列表",
+        "deprecated": false,
+        "description": "",
+        "operationId": "listUsingPOST_1",
+        "tags": [
+          "carrier-strategy-controller"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommonQueryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/strategy/update": {
+      "post": {
+        "summary": "修改承运商策略",
+        "deprecated": false,
+        "description": "",
+        "operationId": "updateUsingPOST",
+        "tags": [
+          "carrier-strategy-controller"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CarrierStrategyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult%C2%ABCarrierStrategyVo%C2%BB"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/warehouse/update": {
+      "post": {
+        "summary": "更新仓库信息",
+        "deprecated": false,
+        "description": "ERP 推送仓库信息新增 或 更新接口, 根据 id 区分, 仓库地址会通过校验转换为标准地址格式写库, 除 id 字段外的其他字段传 null 则不更新",
+        "operationId": "updateWarehouseUsingPOST",
+        "tags": [
+          "warehouse-controller"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WarehouseUpdateDto"
+              },
+              "example": {
+                "id": "WH2021090414503121948297",
+                "action_by": "1",
+                "address1": "21 Whittaker St",
+                "address2": "amet fugiat velit eu",
+                "code": "BG01",
+                "contacter": "Broers",
+                "country": "AU",
+                "email": "labels@broers.com.au",
+                "from_facility": "MEL",
+                "owner_id": "BG",
+                "postcode": "3012",
+                "state": "VIC",
+                "status": 2,
+                "suburb": "maidstone",
+                "telephone": "18922054270",
+                "title": "BG01",
+                "type": 1
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestResult%C2%ABstring%C2%BB"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "404": {
+            "description": "找不到资源",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Carrier": {
+        "title": "Carrier",
+        "type": "object",
+        "properties": {
+          "carrier_agent_code": {
+            "type": "string",
+            "description": "物流代理商Code"
+          },
+          "carrier_agent_id": {
+            "type": "string",
+            "description": "物流代理商ID"
+          },
+          "carrier_agent_name": {
+            "type": "string",
+            "description": "承运商代理名称"
+          },
+          "carrier_channel_code": {
+            "type": "string",
+            "description": "物流渠道Code"
+          },
+          "carrier_channel_id": {
+            "type": "string",
+            "description": "物流渠道ID"
+          },
+          "carrier_type": {
+            "type": "integer",
+            "description": "类型(100业务发货|200平台运费计算|300本地计算)",
+            "format": "int32"
+          },
+          "closed_batch_group": {
+            "type": "string",
+            "description": "批量关单分组"
+          },
+          "closed_batch_limit": {
+            "type": "integer",
+            "description": "关单批次数量",
+            "format": "int32"
+          },
+          "closed_type": {
+            "type": "integer",
+            "description": "关单类型:100|单个 200|批量",
+            "format": "int32"
+          },
+          "code": {
+            "type": "string",
+            "description": "物流唯一编码"
+          },
+          "courier_name": {
+            "type": "string",
+            "description": "承运商channel名称"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "string"
+          },
+          "is_international": {
+            "type": "integer",
+            "description": "国际服务(默认200 否| 100 是)",
+            "format": "int32"
+          },
+          "is_onforwarding": {
+            "type": "integer",
+            "description": "是否转发,100是|200否",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "description": "物流产品名称"
+          },
+          "regex_code": {
+            "type": "string",
+            "description": "物流正则匹配码"
+          },
+          "remark": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number",
+            "description": "评分",
+            "format": "double"
+          },
+          "service_level": {
+            "type": "string",
+            "description": "运费服务产品等级:标准|standard 特快|express 优先|priority 即刻|ondemand"
+          },
+          "service_name": {
+            "type": "string",
+            "description": "承运商carrier名称"
+          },
+          "status": {
+            "type": "integer",
+            "description": "状态（100-启用 200-禁用）",
+            "format": "int32"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_by": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "weight_type": {
+            "type": "integer",
+            "description": "100|实际称重 200|体积重量 300|体积重与重量取最大值  400|按最长边进行",
+            "format": "int32"
+          }
+        }
+      },
+      "CarrierInfoPojo": {
+        "title": "CarrierInfoPojo",
+        "type": "object",
+        "properties": {
+          "agentCode": {
+            "type": "string",
+            "description": "代理编码"
+          },
+          "agentId": {
+            "type": "string",
+            "description": "代理 Id"
+          },
+          "agentName": {
+            "type": "string",
+            "description": "代理名称"
+          },
+          "carrierCode": {
+            "type": "string",
+            "description": "承运商服务编码"
+          },
+          "carrierName": {
+            "type": "string",
+            "description": "承运商服务名称"
+          },
+          "channelCode": {
+            "type": "string",
+            "description": "承运商编码"
+          },
+          "channelId": {
+            "type": "string",
+            "description": "承运商 Id"
+          },
+          "channelName": {
+            "type": "string",
+            "description": "承运商名称"
+          },
+          "courierName": {
+            "type": "string",
+            "description": "承运商名称"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "创建时间",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "string",
+            "description": "承运商服务 Id"
+          },
+          "regexCode": {
+            "type": "string",
+            "description": "系统内部唯一编码"
+          },
+          "remark": {
+            "type": "string",
+            "description": "备注"
+          },
+          "serviceName": {
+            "type": "string",
+            "description": "承运商服务名称"
+          },
+          "status": {
+            "type": "integer",
+            "description": "状态",
+            "format": "int32",
+            "enum": [
+              100,
+              200
+            ]
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "更新时间",
+            "format": "date-time"
+          }
+        },
+        "description": "承运商明细信息"
+      },
+      "CarrierPushToWmsDto": {
+        "title": "CarrierPushToWmsDto",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "code"
+          },
+          "id": {
+            "type": "string",
+            "description": "id"
+          }
+        }
+      },
+      "CarrierStrategyDto": {
+        "title": "CarrierStrategyDto",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "策略编码:code"
+          },
+          "description": {
+            "type": "string",
+            "description": "描述:description"
+          },
+          "filterCarrierIds": {
+            "type": "array",
+            "description": "策略禁用承运商ids",
+            "items": {
+              "type": "string"
+            }
+          },
+          "id": {
+            "type": "string",
+            "description": "id"
+          },
+          "jsonBodyRegex": {
+            "type": "string",
+            "description": "关联属性key:jsonBodyRegex"
+          },
+          "name": {
+            "type": "string",
+            "description": "策略名称:name"
+          },
+          "regexCode": {
+            "type": "string",
+            "description": "正则策略码:regexCode"
+          },
+          "strategyRefsIds": {
+            "type": "array",
+            "description": "策略配置id集合",
+            "items": {
+              "type": "string"
+            }
+          },
+          "strategyRefsType": {
+            "type": "integer",
+            "description": "策略配置类型:当type为300的时候，这里才生效，100-代理 200-渠道 300-物流，代表策略配置的是对应的id",
+            "format": "int32"
+          },
+          "type": {
+            "type": "integer",
+            "description": "类型（100-正则 200-字段 300-关联设置）",
+            "format": "int32"
+          }
+        }
+      },
+      "CarrierStrategyListToErpDto": {
+        "title": "CarrierStrategyListToErpDto",
+        "type": "object",
+        "properties": {
+          "strategyGroup": {
+            "type": "integer",
+            "description": "策略分组, 默认 100 系统默认, 200 手工label",
+            "format": "int32"
+          }
+        }
+      },
+      "CarrierStrategyRefsVo": {
+        "title": "CarrierStrategyRefsVo",
+        "type": "object",
+        "properties": {
+          "carrierAgentIds": {
+            "type": "string"
+          },
+          "carrierChannelIds": {
+            "type": "string"
+          },
+          "carrierIds": {
+            "type": "string"
+          },
+          "carrierStrategyId": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CarrierStrategyVo": {
+        "title": "CarrierStrategyVo",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "filterCarrierIds": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "jsonBodyRegex": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "regexCode": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "strategyRefsList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CarrierStrategyRefsVo"
+            }
+          },
+          "type": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CarrierVo": {
+        "title": "CarrierVo",
+        "type": "object",
+        "properties": {
+          "carrier_agent_code": {
+            "type": "string"
+          },
+          "carrier_agent_id": {
+            "type": "string"
+          },
+          "carrier_channel_code": {
+            "type": "string"
+          },
+          "carrier_channel_id": {
+            "type": "string"
+          },
+          "closed_batch_group": {
+            "type": "string"
+          },
+          "closed_batch_limit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "closed_type": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "code": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "is_alt": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "is_international": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "is_onforwarding": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "is_quote_one_package": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "packages_type": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "regex_code": {
+            "type": "string"
+          },
+          "remark": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number",
+            "format": "double"
+          },
+          "service_level": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tracking_type": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "weight_type": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CommonQueryDto": {
+        "title": "CommonQueryDto",
+        "required": [
+          "limit",
+          "page"
+        ],
+        "type": "object",
+        "properties": {
+          "keyword": {
+            "type": "string",
+            "description": "搜索关键字 模糊搜索"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "页大小",
+            "format": "int32",
+            "example": 20
+          },
+          "orders": {
+            "type": "array",
+            "description": "字段排序",
+            "items": {
+              "$ref": "#/components/schemas/PageOrders"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "description": "当前页码",
+            "format": "int32",
+            "example": 1
+          },
+          "queries": {
+            "type": "array",
+            "description": "字段排序",
+            "items": {
+              "$ref": "#/components/schemas/SearchFields"
+            }
+          }
+        }
+      },
+      "OpenListCarrierStrategyDto": {
+        "title": "OpenListCarrierStrategyDto",
+        "type": "object",
+        "properties": {
+          "strategy_code": {
+            "type": "string"
+          }
+        }
+      },
+      "OpenListCarrierStrategyVoItem": {
+        "title": "OpenListCarrierStrategyVoItem",
+        "type": "object",
+        "properties": {
+          "carrier_info": {
+            "description": "策略关联的承运商信息",
+            "$ref": "#/components/schemas/StrategyParseResultDto"
+          },
+          "code": {
+            "type": "string",
+            "description": "策略编码"
+          },
+          "description": {
+            "type": "string",
+            "description": "策略描述"
+          },
+          "json_body_regex": {
+            "type": "string",
+            "description": "策略附加json编码"
+          },
+          "name": {
+            "type": "string",
+            "description": "策略名"
+          },
+          "regex_code": {
+            "type": "string",
+            "description": "策略内部编码"
+          }
+        }
+      },
+      "OwnerCarrierVo": {
+        "title": "OwnerCarrierVo",
+        "type": "object",
+        "properties": {
+          "carrier_agent_code": {
+            "type": "string",
+            "description": "物流代理商Code"
+          },
+          "carrier_agent_id": {
+            "type": "string",
+            "description": "物流代理商ID"
+          },
+          "carrier_agent_name": {
+            "type": "string",
+            "description": "承运商代理名称"
+          },
+          "carrier_channel_code": {
+            "type": "string",
+            "description": "物流渠道Code"
+          },
+          "carrier_channel_id": {
+            "type": "string",
+            "description": "物流渠道ID"
+          },
+          "carrier_type": {
+            "type": "integer",
+            "description": "类型(100业务发货|200平台运费计算|300本地计算)",
+            "format": "int32"
+          },
+          "closed_batch_group": {
+            "type": "string",
+            "description": "批量关单分组"
+          },
+          "closed_batch_limit": {
+            "type": "integer",
+            "description": "关单批次数量",
+            "format": "int32"
+          },
+          "closed_type": {
+            "type": "integer",
+            "description": "关单类型:100|单个 200|批量",
+            "format": "int32"
+          },
+          "code": {
+            "type": "string",
+            "description": "物流唯一编码"
+          },
+          "courier_name": {
+            "type": "string",
+            "description": "承运商channel名称"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "erp_owner_id": {
+            "type": "string",
+            "description": "货主id"
+          },
+          "id": {
+            "type": "string"
+          },
+          "is_international": {
+            "type": "integer",
+            "description": "国际服务(默认200 否| 100 是)",
+            "format": "int32"
+          },
+          "is_onforwarding": {
+            "type": "integer",
+            "description": "是否转发,100是|200否",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "description": "物流产品名称"
+          },
+          "regex_code": {
+            "type": "string",
+            "description": "物流正则匹配码"
+          },
+          "remark": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number",
+            "description": "评分",
+            "format": "double"
+          },
+          "service_level": {
+            "type": "string",
+            "description": "运费服务产品等级:标准|standard 特快|express 优先|priority 即刻|ondemand"
+          },
+          "service_name": {
+            "type": "string",
+            "description": "承运商carrier名称"
+          },
+          "status": {
+            "type": "integer",
+            "description": "状态（100-启用 200-禁用）",
+            "format": "int32"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_by": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "weight_type": {
+            "type": "integer",
+            "description": "100|实际称重 200|体积重量 300|体积重与重量取最大值  400|按最长边进行",
+            "format": "int32"
+          }
+        }
+      },
+      "PageOrders": {
+        "title": "PageOrders",
+        "type": "object",
+        "properties": {
+          "direction": {
+            "type": "string",
+            "description": "排序方向: ASC 升序，DESC 倒序",
+            "example": "DESC"
+          },
+          "field": {
+            "type": "string",
+            "description": "字段名"
+          }
+        }
+      },
+      "PagesDto": {
+        "title": "PagesDto",
+        "type": "object",
+        "properties": {
+          "pages": {
+            "description": "分页参数",
+            "$ref": "#/components/schemas/CommonQueryDto"
+          }
+        }
+      },
+      "RestResult": {
+        "title": "RestResult",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {}
+          },
+          "hasMore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "tc": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tp": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RestResult«CarrierInfoPojo»": {
+        "title": "RestResult«CarrierInfoPojo»",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/CarrierInfoPojo"
+          },
+          "hasMore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "tc": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tp": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RestResult«CarrierStrategyVo»": {
+        "title": "RestResult«CarrierStrategyVo»",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/CarrierStrategyVo"
+          },
+          "hasMore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "tc": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tp": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RestResult«List«CarrierVo»»": {
+        "title": "RestResult«List«CarrierVo»»",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CarrierVo"
+            }
+          },
+          "hasMore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "tc": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tp": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RestResult«List«Carrier»»": {
+        "title": "RestResult«List«Carrier»»",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Carrier"
+            }
+          },
+          "hasMore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "tc": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tp": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RestResult«List«OpenListCarrierStrategyVoItem»»": {
+        "title": "RestResult«List«OpenListCarrierStrategyVoItem»»",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenListCarrierStrategyVoItem"
+            }
+          },
+          "hasMore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "tc": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tp": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RestResult«List«OwnerCarrierVo»»": {
+        "title": "RestResult«List«OwnerCarrierVo»»",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OwnerCarrierVo"
+            }
+          },
+          "hasMore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "tc": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tp": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RestResult«List«地址检验响应»»": {
+        "title": "RestResult«List«地址检验响应»»",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/%E5%9C%B0%E5%9D%80%E6%A3%80%E9%AA%8C%E5%93%8D%E5%BA%94"
+            }
+          },
+          "hasMore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "tc": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tp": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RestResult«Void»": {
+        "title": "RestResult«Void»",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "hasMore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "tc": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tp": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RestResult«string»": {
+        "title": "RestResult«string»",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "data": {
+            "type": "string"
+          },
+          "hasMore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "tc": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tp": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RestResult«地址检验响应»": {
+        "title": "RestResult«地址检验响应»",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/%E5%9C%B0%E5%9D%80%E6%A3%80%E9%AA%8C%E5%93%8D%E5%BA%94"
+          },
+          "hasMore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "tc": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tp": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SearchFields": {
+        "title": "SearchFields",
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "字段名"
+          },
+          "value": {
+            "type": "string",
+            "description": "值"
+          }
+        }
+      },
+      "StrategyAvailableWarehouseDto": {
+        "title": "StrategyAvailableWarehouseDto",
+        "type": "object",
+        "properties": {
+          "strategyCode": {
+            "type": "string",
+            "description": "策略码:strategyCode"
+          },
+          "warehouseCodes": {
+            "type": "array",
+            "description": "仓库编码数组",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "StrategyParseResultDto": {
+        "title": "StrategyParseResultDto",
+        "type": "object",
+        "properties": {
+          "agent_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "carrier_agent_code": {
+            "type": "string"
+          },
+          "carrier_channel_code": {
+            "type": "string"
+          },
+          "carrier_code": {
+            "type": "string"
+          },
+          "carrier_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "channel_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "filter_carrier_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "service_level": {
+            "type": "string"
+          },
+          "sort_type": {
+            "type": "string"
+          },
+          "type": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "WarehouseUpdateDto": {
+        "title": "WarehouseUpdateDto",
+        "required": [
+          "action_by",
+          "address1",
+          "code",
+          "contacter",
+          "email",
+          "id",
+          "postcode",
+          "state",
+          "status",
+          "suburb",
+          "telephone",
+          "title",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "action_by": {
+            "type": "string",
+            "description": "操作人"
+          },
+          "address1": {
+            "type": "string",
+            "description": "address1"
+          },
+          "address2": {
+            "type": "string",
+            "description": "address2"
+          },
+          "business_type": {
+            "type": "string",
+            "description": "业务类型, 关联ERP数据"
+          },
+          "code": {
+            "type": "string",
+            "description": "code"
+          },
+          "contacter": {
+            "type": "string",
+            "description": "contacter"
+          },
+          "country": {
+            "type": "string",
+            "description": "country",
+            "example": "AU , AUSTRALIA"
+          },
+          "email": {
+            "type": "string",
+            "description": "email"
+          },
+          "id": {
+            "type": "string",
+            "description": "仓库ID"
+          },
+          "owner_id": {
+            "type": "string",
+            "description": "货主 ID"
+          },
+          "postcode": {
+            "type": "string",
+            "description": "postcode"
+          },
+          "state": {
+            "type": "string",
+            "description": "state",
+            "example": "NSW, VIC, ..."
+          },
+          "status": {
+            "type": "integer",
+            "description": "status",
+            "format": "int32"
+          },
+          "suburb": {
+            "type": "string",
+            "description": "suburb",
+            "example": "MELBOURNE, SYDNEY, ..."
+          },
+          "telephone": {
+            "type": "string",
+            "description": "telephone"
+          },
+          "title": {
+            "type": "string",
+            "description": "title"
+          },
+          "type": {
+            "type": "integer",
+            "description": "type",
+            "format": "int32"
+          }
+        }
+      },
+      "地址检验响应": {
+        "title": "地址检验响应",
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "地址栏"
+          },
+          "address2": {
+            "type": "string",
+            "description": "地址栏2"
+          },
+          "adviceAddress": {
+            "type": "string",
+            "description": "建议地址"
+          },
+          "country": {
+            "type": "string",
+            "description": "国家"
+          },
+          "countryCode": {
+            "type": "string",
+            "description": "国家编码"
+          },
+          "fullAddress": {
+            "type": "string",
+            "description": "全文地址"
+          },
+          "isPoBox": {
+            "type": "boolean",
+            "description": "是否 PoBox",
+            "example": false
+          },
+          "orderId": {
+            "type": "string",
+            "description": "自编编号"
+          },
+          "postcode": {
+            "type": "string",
+            "description": "邮编"
+          },
+          "reason": {
+            "type": "string",
+            "description": "拦截原因"
+          },
+          "state": {
+            "type": "string",
+            "description": "省份"
+          },
+          "stateCode": {
+            "type": "string",
+            "description": "省份编码"
+          },
+          "suburb": {
+            "type": "string",
+            "description": "区域"
+          },
+          "suburbCode": {
+            "type": "string",
+            "description": "区域编码"
+          },
+          "success": {
+            "type": "boolean",
+            "description": "验证通过",
+            "example": false
+          }
+        }
+      },
+      "地址验证请求DTO": {
+        "title": "地址验证请求DTO",
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "地址栏"
+          },
+          "address2": {
+            "type": "string",
+            "description": "地址栏2"
+          },
+          "country": {
+            "type": "string",
+            "description": "国家, 默认 Australia"
+          },
+          "is_return": {
+            "type": "boolean",
+            "description": "是否返回建议值",
+            "example": false
+          },
+          "order_id": {
+            "type": "string",
+            "description": "自编编号, 用于与结果保持关联, 会直接返回"
+          },
+          "postcode": {
+            "type": "string",
+            "description": "邮编"
+          },
+          "state": {
+            "type": "string",
+            "description": "省份"
+          },
+          "suburb": {
+            "type": "string",
+            "description": "区域"
+          }
+        }
+      },
+      "批量地址验证请求DTO": {
+        "title": "批量地址验证请求DTO",
+        "type": "object",
+        "properties": {
+          "validate_list": {
+            "type": "array",
+            "description": "批量地址检验, 单次最大 200 个",
+            "items": {
+              "$ref": "#/components/schemas/%E5%9C%B0%E5%9D%80%E9%AA%8C%E8%AF%81%E8%AF%B7%E6%B1%82DTO"
+            }
+          }
+        }
+      },
+      "更新物流发运策略配置 Dto": {
+        "title": "更新物流发运策略配置 Dto",
+        "required": [
+          "refCodes",
+          "strategyCode",
+          "strategyType"
+        ],
+        "type": "object",
+        "properties": {
+          "refCodes": {
+            "type": "array",
+            "description": "策略配置编码",
+            "items": {
+              "type": "string"
+            }
+          },
+          "strategyCode": {
+            "type": "string",
+            "description": "策略编码"
+          },
+          "strategyType": {
+            "type": "integer",
+            "description": "策略配置类型",
+            "format": "int32"
+          }
+        }
+      },
+      "查询货主承运商查询传参": {
+        "title": "查询货主承运商查询传参",
+        "required": [
+          "erpOwnerId",
+          "queryTw",
+          "warehouseCode"
+        ],
+        "type": "object",
+        "properties": {
+          "erpOwnerId": {
+            "type": "string",
+            "description": "货主id"
+          },
+          "queryTw": {
+            "type": "boolean",
+            "description": "是否只查询TW承运商",
+            "example": false
+          },
+          "warehouseCode": {
+            "type": "string",
+            "description": "仓库编码"
+          }
+        }
+      }
+    },
+    "responses": {},
+    "securitySchemes": {}
+  },
+  "servers": [],
+  "security": []
+}

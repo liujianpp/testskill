@@ -1,0 +1,89 @@
+{
+  "columns": [
+    {
+      "key": "case_id",
+      "name": "用例编号",
+      "width": 12
+    },
+    {
+      "key": "module",
+      "name": "所属模块",
+      "width": 15
+    },
+    {
+      "key": "feature",
+      "name": "功能点",
+      "width": 15
+    },
+    {
+      "key": "title",
+      "name": "用例标题",
+      "width": 30
+    },
+    {
+      "key": "description",
+      "name": "用例描述",
+      "width": 40
+    },
+    {
+      "key": "preconditions",
+      "name": "前置条件",
+      "width": 30
+    },
+    {
+      "key": "steps",
+      "name": "测试步骤",
+      "width": 55
+    },
+    {
+      "key": "test_data",
+      "name": "测试数据",
+      "width": 35
+    },
+    {
+      "key": "expected_result",
+      "name": "预期结果",
+      "width": 55
+    },
+    {
+      "key": "validation_sql",
+      "name": "验证SQL",
+      "width": 60
+    },
+    {
+      "key": "case_type",
+      "name": "用例类型",
+      "width": 10
+    },
+    {
+      "key": "priority",
+      "name": "优先级",
+      "width": 8
+    },
+    {
+      "key": "design_method",
+      "name": "设计方法",
+      "width": 18
+    },
+    {
+      "key": "tech_stack",
+      "name": "技术栈",
+      "width": 20
+    },
+    {
+      "key": "requirement_ref",
+      "name": "关联需求",
+      "width": 15
+    },
+    {
+      "key": "status",
+      "name": "状态",
+      "width": 8
+    },
+    {
+      "key": "notes",
+      "name": "备注",
+      "width": 30
+    }
+  ]
+}

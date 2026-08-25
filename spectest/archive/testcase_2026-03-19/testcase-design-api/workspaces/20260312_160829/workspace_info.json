@@ -1,0 +1,10 @@
+{
+  "workspace": "/home/che/.claude/skills/testcase-design-api/workspaces/20260312_160829",
+  "created_at": "2026-03-12T16:08:29.095501",
+  "files": {
+    "api_doc": "/home/che/.claude/skills/testcase-design-api/workspaces/20260312_160829/api_docs/1212.openapi.json",
+    "db_info": "/home/che/.claude/skills/testcase-design-api/workspaces/20260312_160829/db_info/db_config.json"
+  },
+  "api_doc_filename": "1212.openapi.json",
+  "testcase_filename": null
+}

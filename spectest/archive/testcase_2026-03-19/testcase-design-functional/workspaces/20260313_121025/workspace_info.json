@@ -1,0 +1,10 @@
+{
+  "workspace": "/home/che/.claude/skills/testcase-design-functional/workspaces/20260313_121025",
+  "created_at": "2026-03-13T12:10:25.987407",
+  "skill": "design-functional-cases",
+  "files": {
+    "feature_list": "/home/che/.claude/skills/testcase-design-functional/workspaces/20260313_121025/project_info/1.md",
+    "feature_list_filename": "1.md",
+    "db_info": "/home/che/.claude/skills/testcase-design-functional/workspaces/20260313_121025/db_info/db_config.json"
+  }
+}

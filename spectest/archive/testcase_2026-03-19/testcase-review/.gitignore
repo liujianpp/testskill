@@ -1,0 +1,8 @@
+db_config/db_config.json
+project_info/
+api_docs/
+testcase/
+output/
+__pycache__/
+*.pyc
+.env
