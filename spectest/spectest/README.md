@@ -12,8 +12,8 @@ SpecTest 是一个统一的测试设计工作流工具，整合了工作流管�
 
 ### 核心特性
 
-- ✅ **统一的工作流**：8 步完成从需求到归档的完整流程
-- ✅ **灵活的输入源**：支持测试点、API 文档、功能清单
+- ✅ **统一的工作流**：9 步完成从需求到归档的完整流程（含可选测试计划）
+- ✅ **灵活的输入源**：支持测试点、API 文档、功能清单；需求文档可直接读取 PDF/Word
 - ✅ **智能的设计能力**：自动生成测试点和用例
 - ✅ **增强的 Excel 输出**：3 个 Sheet（用例、覆盖矩阵、统计汇总）
 - ✅ **多格式支持**：Excel（彩色标记）+ XMind 思维导图
@@ -108,14 +108,15 @@ pip install anthropic
 
 ## 📚 技能列表
 
-### 核心技能（7个）
+### 核心技能（8个）
 
 | 技能       | 命令                            | 功能                 |
 | ---------- | ------------------------------- | -------------------- |
 | 创建变更   | `/spectest-new <名称>`        | 创建变更目录并初始化 |
 | 需求分析   | `/spectest-analysis`          | 智能提取功能点和 API |
-| 生成测试点 | `/spectest-points 自动/手动`  | 自动或手动生成测试点 |
-| 生成用例   | `/spectest-generate from-xxx` | 从多种输入源生成用例 |
+| 测试计划   | `/spectest-plan`              | 生成 test-plan.md（可选） |
+| 生成测试点 | `/spectest-points 自动/手动`  | 按设计方法推导测试点 |
+| 生成用例   | `/spectest-generate from-xxx` | 先出 design.md 再生成用例 |
 | 评审用例   | `/spectest-review <文件>`     | 评审用例质量和覆盖率 |
 | 生成报告   | `/spectest-report`            | 生成执行报告         |
 | 归档       | `/spectest-archive`           | 归档完成的变更       |
@@ -134,19 +135,21 @@ pip install anthropic
 ```
 1. spectest-new     → 创建变更目录
         ↓
-2. spectest-analysis → 智能需求分析（提取功能点、API）
+2. spectest-analysis → 智能需求分析（可直接读 PDF/Word，提取功能点、API）
         ↓
-3. spectest-points   → 生成测试点（自动/手动）
+3. spectest-plan    → 测试计划 test-plan.md（可选）
         ↓
-4. spectest-generate → 生成测试用例（3种输入源）
+4. spectest-points   → 生成测试点（按设计方法推导，自动/手动）
         ↓
-5. spectest-review   → 评审用例（可选）
+5. spectest-generate → 生成测试用例（先出 design.md，3种输入源）
         ↓
-6. spectest-fix      → 修复用例（可选）
+6. spectest-review   → 评审用例（可选）
         ↓
-7. spectest-report   → 生成执行报告
+7. spectest-fix      → 修复用例（可选）
         ↓
-8. spectest-archive  → 归档变更
+8. spectest-report   → 生成执行报告
+        ↓
+9. spectest-archive  → 归档变更
 ```
 
 ---
@@ -443,6 +446,17 @@ done
 ---
 
 ## 📝 更新日志
+
+### V1.2 (2026-10-27)
+
+**整合 OpenTest 1.0.5 新版能力：**
+
+- ➕ 新增 `spectest-plan` 技能：测试计划 test-plan.md（范围/策略/环境/人力人天/进度/进出标准/风险/交付物），流程变更为 9 步（plan 可选）
+- 🔧 `spectest-generate` from-specs：先出用例设计方案 `design.md`（覆盖矩阵 + 用例提纲，可审可改）再展开导出
+- 🔧 `spectest-points`：按等价类/边界值/场景法/错误推测推导并标注设计方法；联动 test-plan 范围与优先级
+- 🔧 `spectest-analysis`：新增 `extract_doc.py` 直接抽取 PDF/Word(.docx)/MD/TXT 需求正文（依赖 pypdf、python-docx）
+- 🐛 修复 pyproject.toml 声明 hatchling 但无包可建导致 `uv sync`/`uv run` 失败的既有问题（改为 uv 虚拟项目）
+- 📄 testflow（SKILL.md / workflow-map / user-guide）与各级 CLAUDE.md 流程描述同步为 9 步
 
 ### V1.1 (2026-03-24)
 

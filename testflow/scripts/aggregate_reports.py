@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
-"""三源执行结果汇总 → 统一 Markdown 报告。
+"""多源执行结果汇总 → 统一 Markdown 报告。
 
 源（缺哪个跳过哪个）:
     1. 25列 testcases.xlsx   —— 人工执行结果（实际结果/是否通过/执行时间/关联需求ID）
     2. allure-results 目录    —— 接口自动化（*-result.json 的 status）
     3. case-runner MD 报告    —— UI 执行（RESULT: PASS|FAIL|BLOCKED 行）
+    4. miniprogram 报告       —— 小程序支线（run-with-reports.sh 生成的台账或 Session 批量报告）
 
 用法:
     python aggregate_reports.py --excel artifacts/xx_testcases.xlsx \
         [--allure-dir allure-results] [--ui-report reports/case-run-x.md] \
+        [--mp-report reports/miniprogram-executions.md] \
         [--output artifacts/unified-report.md]
 """
 import argparse
@@ -22,6 +24,11 @@ from openpyxl import load_workbook
 PASS_TOKENS = {"是", "通过", "y", "yes", "pass", "passed", "true", "1"}
 FAIL_TOKENS = {"否", "不通过", "未通过", "失败", "n", "no", "fail", "failed", "false", "0"}
 UI_RESULT_RE = re.compile(r"(?:RESULT|结果)\**[:：]\s*\**\s*(PASS|FAIL|BLOCKED)", re.IGNORECASE)
+# miniprogram 台账行：- **TC-MP-001** | PASS | exit=0 | spec=`...` | artifacts=`...`
+MP_LEDGER_RE = re.compile(r"^-\s+\*\*(.+?)\*\*\s*\|\s*(PASS|FAIL|NOT_RUN)\s*\|", re.MULTILINE)
+# miniprogram 批量报告「执行顺序」行：1. `tests/auth/auth.spec.js` — PASS（全角破折号）
+MP_ORDER_RE = re.compile(r"^\d+\.\s+`(.+?)`\s+—\s+(PASS|FAIL|NOT_RUN)\s*$", re.MULTILINE)
+MP_SESSION_RE = re.compile(r"^##\s+Session\b.*$", re.MULTILINE)
 
 
 def cell_str(v) -> str:
@@ -83,12 +90,43 @@ def read_ui_results(path: str) -> list[dict]:
     return rows
 
 
+def read_mp_results(path: str) -> list[dict]:
+    """解析 miniprogram-run 的报告（自动识别两种格式）。
+
+    - 台账 miniprogram-executions.md：按 ``## Session`` 分段累积，取**最后一个** Session 段，
+      解析 ``- **<用例ID>** | <STATUS> |`` 行（label 为用例 ID，可与 25 列编号对齐）。
+    - Session 批量报告 miniprogram-report-<sessionId>.md：解析「执行顺序」的
+      ``N. `<spec路径>` — <STATUS>`` 行（含 NOT_RUN，label 为 spec 路径）。
+    """
+    text = Path(path).read_text(encoding="utf-8", errors="replace")
+
+    sessions = list(MP_SESSION_RE.finditer(text))
+    if sessions:
+        last = sessions[-1]
+        chunk = text[last.end():]
+        # 后续若再出现 Session 头则忽略（取最后一段）
+        nxt = MP_SESSION_RE.search(chunk)
+        if nxt:
+            chunk = chunk[:nxt.start()]
+        return [
+            {"result": m.group(2), "label": m.group(1).strip()}
+            for m in MP_LEDGER_RE.finditer(chunk)
+        ]
+
+    return [
+        {"result": m.group(2), "label": m.group(1).strip()}
+        for m in MP_ORDER_RE.finditer(text)
+    ]
+
+
 def _rate(p: int, f: int) -> str:
     """通过率 = 通过/(通过+失败)，分母为 0 时显示 '-'。"""
     return f"{p / (p + f) * 100:.1f}%" if (p + f) else "-"
 
 
-def build_report(excel_rows, allure_rows, ui_rows) -> str:
+def build_report(excel_rows, allure_rows, ui_rows, mp_rows=None) -> str:
+    mp_rows = mp_rows or []
+
     # ── 统计 ──
     manual_pass = sum(1 for r in excel_rows if r["is_passed"] is True)
     manual_fail = sum(1 for r in excel_rows if r["is_passed"] is False)
@@ -101,14 +139,19 @@ def build_report(excel_rows, allure_rows, ui_rows) -> str:
     ui_fail = sum(1 for r in ui_rows if r["result"] == "FAIL")
     ui_blocked = sum(1 for r in ui_rows if r["result"] == "BLOCKED")
 
+    mp_pass = sum(1 for r in mp_rows if r["result"] == "PASS")
+    mp_fail = sum(1 for r in mp_rows if r["result"] == "FAIL")
+    mp_not_run = sum(1 for r in mp_rows if r["result"] == "NOT_RUN")
+
     lines = ["# 测试统一报告", "", "## 1. 执行总览", ""]
     lines.append("| 来源 | 用例数 | 通过 | 失败 | 阻塞 | 待执行 | 通过率 |")
     lines.append("|---|---|---|---|---|---|---|")
     lines.append(f"| 人工用例(25列Excel) | {len(excel_rows)} | {manual_pass} | {manual_fail} | - | {manual_pending} | {_rate(manual_pass, manual_fail)} |")
     lines.append(f"| 接口自动化(Allure) | {len(allure_rows)} | {allure_pass} | {allure_fail} | - | - | {_rate(allure_pass, allure_fail)} |")
     lines.append(f"| UI执行(case-runner) | {len(ui_rows)} | {ui_pass} | {ui_fail} | {ui_blocked} | - | {_rate(ui_pass, ui_fail)} |")
+    lines.append(f"| 小程序执行(miniprogram) | {len(mp_rows)} | {mp_pass} | {mp_fail} | - | {mp_not_run} | {_rate(mp_pass, mp_fail)} |")
     lines.append("")
-    lines.append("> 通过率 = 通过/(通过+失败)；阻塞单列不计入分母。")
+    lines.append("> 通过率 = 通过/(通过+失败)；阻塞/未执行单列不计入分母。")
     lines.append("")
 
     # ── 需求覆盖 ──
@@ -162,6 +205,14 @@ def build_report(excel_rows, allure_rows, ui_rows) -> str:
             lines.append(f"- {r['result']}：{r['line']}")
     lines.append("")
 
+    lines += ["### 3.4 小程序执行（miniprogram）", ""]
+    if not mp_rows:
+        lines.append("（小程序报告未生成）")
+    else:
+        for r in mp_rows:
+            lines.append(f"- {r['result']}：{r['label']}")
+    lines.append("")
+
     # ── 风险与建议 ──
     lines += ["## 4. 风险与建议", ""]
     risks = []
@@ -173,6 +224,11 @@ def build_report(excel_rows, allure_rows, ui_rows) -> str:
         risks.append(f"- 接口自动化失败 {allure_fail} 条：{', '.join(names[:10])}{'…' if len(names) > 10 else ''}")
     if ui_fail or ui_blocked:
         risks.append(f"- UI 执行失败 {ui_fail} 条、阻塞 {ui_blocked} 条（详见截图与报告）")
+    if mp_fail:
+        labels = [r["label"] for r in mp_rows if r["result"] == "FAIL"]
+        risks.append(f"- 小程序执行失败 {mp_fail} 条：{', '.join(labels[:10])}{'…' if len(labels) > 10 else ''}（详见 trace viewer 与 artifacts）")
+    if mp_not_run:
+        risks.append(f"- 小程序有 {mp_not_run} 条未执行（STOP_ON_FAIL 停跑或 --from 续跑场景，可用 suite --from 续跑）")
     weak = [k for k, g in reqs.items() if k != "（未关联）" and all(not r["executed"] or r["is_passed"] is False for r in g)]
     if weak:
         risks.append(f"- 覆盖薄弱需求（无用例通过）：{', '.join(sorted(weak))}")
@@ -184,10 +240,12 @@ def build_report(excel_rows, allure_rows, ui_rows) -> str:
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="三源执行结果汇总 → 统一 Markdown 报告")
+    ap = argparse.ArgumentParser(description="多源执行结果汇总 → 统一 Markdown 报告")
     ap.add_argument("--excel", default=None, help="25列 testcases.xlsx 路径（默认: cwd 的 artifacts/ 下首个 *_testcases.xlsx）")
     ap.add_argument("--allure-dir", default=None, help="allure-results 目录（缺省则跳过该节）")
     ap.add_argument("--ui-report", default=None, help="case-runner MD 报告路径（缺省则跳过该节）")
+    ap.add_argument("--mp-report", default=None,
+                    help="miniprogram 报告路径（台账 miniprogram-executions.md 或 Session 批量报告；缺省则跳过该节）")
     ap.add_argument("--output", default=None, help="输出路径（默认: Excel 同目录 unified-report.md）")
     args = ap.parse_args(argv)
 
@@ -205,14 +263,15 @@ def main(argv=None) -> int:
     excel_rows = read_excel_rows(args.excel)
     allure_rows = read_allure_results(args.allure_dir) if args.allure_dir else []
     ui_rows = read_ui_results(args.ui_report) if args.ui_report and Path(args.ui_report).exists() else []
+    mp_rows = read_mp_results(args.mp_report) if args.mp_report and Path(args.mp_report).exists() else []
 
-    report = build_report(excel_rows, allure_rows, ui_rows)
+    report = build_report(excel_rows, allure_rows, ui_rows, mp_rows)
 
     # 注意：output 默认依赖 args.excel 的 parent，必须在 excel 推导之后计算
     output = args.output or str(Path(args.excel).parent / "unified-report.md")
     Path(output).write_text(report, encoding="utf-8")
     print(f"统一报告已生成: {output}")
-    print(f"  人工用例: {len(excel_rows)} 行 | Allure: {len(allure_rows)} 条 | UI: {len(ui_rows)} 条")
+    print(f"  人工用例: {len(excel_rows)} 行 | Allure: {len(allure_rows)} 条 | UI: {len(ui_rows)} 条 | 小程序: {len(mp_rows)} 条")
     return 0
 
 

@@ -1,6 +1,6 @@
 ---
 name: spectest-generate
-description: SpecTest 生成测试用例 - 支持多种输入源生成完整测试用例并导出 Excel 或 XMind。三种模式：from-specs（从测试点）、from-api（从API文档智能生成）、from-feature（从功能清单智能生成）。当用户要生成用例、执行 spectest-generate 时使用。对应流程中的「生成测试用例」步骤。
+description: SpecTest 生成测试用例 - 支持多种输入源生成完整测试用例并导出 Excel 或 XMind。三种模式：from-specs（从测试点，先出 design.md 用例设计方案再展开）、from-api（从API文档智能生成）、from-feature（从功能清单智能生成）。当用户要生成用例、写用例设计方案、或执行 spectest-generate 时使用。对应流程中的「生成测试用例」步骤。
 ---
 
 # spectest-generate：用例生成
@@ -38,22 +38,25 @@ description: SpecTest 生成测试用例 - 支持多种输入源生成完整测�
 2. **读取上下文**：
    - `specs/*.md`（必须）
    - `requirements-analysis.md`（可选）
+   - `test-plan.md`（可选，范围与优先级策略）
    - `proposal.md`（可选）
-3. **解析测试点**：提取每个测试点的：
-   - 场景描述
-   - 验收条件
-   - 测试数据
-   - 验证 SQL
-   - 优先级
-   - 测试类型
-4. **转换为结构化 JSON**：生成 `artifacts/testcases.json`
-5. **调用生成脚本**：
+3. **解析测试点**：兼容两种测试点格式（新旧均可）：
+   - 结构化字段式：用户故事、验收条件、测试数据、验证 SQL、优先级、测试类型、设计方法（如有）
+   - 模块表格式（`模块 | 测试点 | 设计方法 | 验收方向`）
+4. **确保用例设计方案 design.md**：
+   - 若已存在 `design.md`：读取并以其覆盖矩阵与用例提纲为准（用户可先改方案再重跑）
+   - 若不存在：按 [references/design-template.md](references/design-template.md) 在变更目录下生成 `design.md`（设计目标与范围、设计方法、覆盖矩阵、用例提纲、通过标准与风险），并告知用户路径
+   - 若用户本轮只要方案、不要导出，可停在此步
+5. **按 design.md 展开完整用例**：依据覆盖矩阵与提纲，为每条提纲补全前置条件、步骤、预期结果与优先级
+6. **转换为结构化 JSON**：生成 `artifacts/testcases.json`
+7. **调用生成脚本**：
    - Excel：`generate_excel.py`
    - XMind：`generate_xmind.py`
-6. **告知用户**：列出生成的文件路径。
+8. **告知用户**：列出 `design.md` 与生成的用例文件路径。
 
 ### 产物
 
+- `spectest/changes/<name>/design.md`（用例设计方案）
 - `spectest/changes/<name>/artifacts/<name>_testcases.xlsx`
 - `spectest/changes/<name>/artifacts/<name>_testcases.xmind`
 - `spectest/changes/<name>/artifacts/testcases.json`

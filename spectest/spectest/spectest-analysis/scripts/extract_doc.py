@@ -1,0 +1,145 @@
+#!/usr/bin/env python3
+"""
+从 PDF / Word(docx) / Markdown / 纯文本抽取正文，输出 Markdown 供 spectest-analysis 使用。
+
+用法：
+    python extract_doc.py --input path/to/prd.pdf [--input more.docx] [--output artifacts/requirements-extracted.md]
+"""
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+from typing import List, Tuple
+
+
+SUPPORTED = {".pdf", ".docx", ".md", ".txt"}
+
+
+def _extract_pdf(path: Path) -> str:
+    try:
+        from pypdf import PdfReader
+    except ImportError:
+        print("错误：需要安装 pypdf，请运行：pip install pypdf", file=sys.stderr)
+        sys.exit(1)
+
+    reader = PdfReader(str(path))
+    parts: List[str] = []
+    for i, page in enumerate(reader.pages, 1):
+        text = page.extract_text() or ""
+        text = text.strip()
+        if text:
+            parts.append(f"### 第 {i} 页\n\n{text}")
+    return "\n\n".join(parts) if parts else "（未抽取到文本，可能是扫描件或加密 PDF）"
+
+
+def _extract_docx(path: Path) -> str:
+    try:
+        from docx import Document
+    except ImportError:
+        print("错误：需要安装 python-docx，请运行：pip install python-docx", file=sys.stderr)
+        sys.exit(1)
+
+    doc = Document(str(path))
+    parts: List[str] = []
+
+    for para in doc.paragraphs:
+        text = (para.text or "").strip()
+        if text:
+            parts.append(text)
+
+    for ti, table in enumerate(doc.tables, 1):
+        rows: List[str] = []
+        for row in table.rows:
+            cells = [(cell.text or "").strip().replace("\n", " ") for cell in row.cells]
+            rows.append("| " + " | ".join(cells) + " |")
+        if rows:
+            ncol = len(table.rows[0].cells)
+            header_sep = "| " + " | ".join("---" for _ in range(ncol)) + " |"
+            parts.append(f"#### 表格 {ti}\n\n{rows[0]}\n{header_sep}\n" + "\n".join(rows[1:]))
+
+    return "\n\n".join(parts) if parts else "（未抽取到文本）"
+
+
+def _extract_text(path: Path) -> str:
+    raw = path.read_bytes()
+    for enc in ("utf-8-sig", "utf-8", "gb18030", "latin-1"):
+        try:
+            return raw.decode(enc).strip() or "（文件为空）"
+        except UnicodeDecodeError:
+            continue
+    return raw.decode("utf-8", errors="replace").strip() or "（文件为空）"
+
+
+def extract_one(path: Path) -> Tuple[str, str]:
+    """返回 (标题用路径, 正文)。失败时正文为错误说明。"""
+    suffix = path.suffix.lower()
+    if not path.is_file():
+        return str(path), f"错误：文件不存在：{path}"
+    if suffix == ".doc":
+        return str(path), "错误：不支持旧版 .doc，请另存为 .docx 后再试"
+    if suffix not in SUPPORTED:
+        return str(path), f"错误：不支持的格式 `{suffix}`，支持：{', '.join(sorted(SUPPORTED))}"
+
+    try:
+        if suffix == ".pdf":
+            body = _extract_pdf(path)
+        elif suffix == ".docx":
+            body = _extract_docx(path)
+        else:
+            body = _extract_text(path)
+        return str(path), body
+    except SystemExit:
+        raise
+    except Exception as e:
+        return str(path), f"错误：抽取失败：{e}"
+
+
+def build_markdown(results: List[Tuple[str, str]]) -> str:
+    sections = ["# 需求文档抽取结果", ""]
+    for path, body in results:
+        sections.append(f"## 来源：`{path}`")
+        sections.append("")
+        sections.append(body)
+        sections.append("")
+    return "\n".join(sections).rstrip() + "\n"
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Extract text from PDF/DOCX/MD/TXT for spectest-analysis")
+    parser.add_argument(
+        "--input",
+        "-i",
+        action="append",
+        dest="inputs",
+        required=True,
+        help="Input file path (repeatable)",
+    )
+    parser.add_argument("--output", "-o", help="Output Markdown path (default: stdout)")
+    args = parser.parse_args()
+
+    results: List[Tuple[str, str]] = []
+    any_ok = False
+    for raw in args.inputs:
+        path = Path(raw).expanduser().resolve()
+        p, body = extract_one(path)
+        results.append((p, body))
+        if not body.startswith("错误："):
+            any_ok = True
+
+    md = build_markdown(results)
+
+    if args.output:
+        out = Path(args.output)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(md, encoding="utf-8")
+        print(f"已写入：{out}")
+    else:
+        sys.stdout.write(md)
+
+    if not any_ok:
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

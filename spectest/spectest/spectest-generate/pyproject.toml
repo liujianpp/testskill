@@ -7,7 +7,3 @@ dependencies = [
     "openpyxl",
     "pymysql",
 ]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"

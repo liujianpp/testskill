@@ -13,16 +13,17 @@
 **整合完成日期：** 2026-03-19
 **整合版本：** SpecTest V1
 
-### SpecTest 8步工作流
+### SpecTest 9步工作流
 
 1. **spectest-new** - 创建新的测试变更目录
-2. **spectest-analysis** - 智能需求分析（支持 API/功能清单）
-3. **spectest-points** - 生成测试点文件（自动或手动）
-4. **spectest-generate** - 生成测试用例（Excel/XMind）
-5. **spectest-review** - 评审测试用例质量
-6. **spectest-fix** - 自动修复测试用例问题
-7. **spectest-report** - 生成测试执行报告
-8. **spectest-archive** - 归档完成的变更
+2. **spectest-analysis** - 智能需求分析（支持直接读取 PDF/docx/md/txt，API/功能清单）
+3. **spectest-plan** - 生成测试计划 test-plan.md（范围/策略/人天/进度，可选）
+4. **spectest-points** - 生成测试点文件（按设计方法推导，自动或手动）
+5. **spectest-generate** - 生成测试用例（先出 design.md 设计方案，再导出 Excel/XMind）
+6. **spectest-review** - 评审测试用例质量
+7. **spectest-fix** - 自动修复测试用例问题
+8. **spectest-report** - 生成测试执行报告
+9. **spectest-archive** - 归档完成的变更
 
 ## 架构
 
@@ -131,13 +132,14 @@ uv sync --project "$SKILL_DIR"
 SpecTest 在 `spectest/changes/<name>/` 中遵循顺序工作流：
 
 1. **spectest-new** - 创建变更目录并编写 `proposal.md`
-2. **spectest-analysis** - 生成 `requirements-analysis.md`（智能需求拆解、可测项梳理）
-3. **spectest-points** - 生成 `specs/*.md` 测试点文件（支持自动生成）
-4. **spectest-generate** - 根据测试点生成测试用例（Excel/XMind，支持 3 种模式）
-5. **spectest-review** - 评审测试用例质量、覆盖率、SQL 正确性
-6. **spectest-fix** - 自动修复测试用例中发现的问题
-7. **spectest-report** - 生成 `report.md` 执行摘要
-8. **spectest-archive** - 将完成的变更移至 `archive/`
+2. **spectest-analysis** - 生成 `requirements-analysis.md`（智能需求拆解、可测项梳理；可直接抽取 PDF/docx 正文至 `artifacts/requirements-extracted.md`）
+3. **spectest-plan** - 生成 `test-plan.md` 测试计划（范围/策略/人天/进度/进出标准，可选）
+4. **spectest-points** - 生成 `specs/*.md` 测试点文件（按设计方法推导并标注，支持自动生成）
+5. **spectest-generate** - 根据测试点生成测试用例（先生成 `design.md` 设计方案再展开；Excel/XMind，支持 3 种模式）
+6. **spectest-review** - 评审测试用例质量、覆盖率、SQL 正确性
+7. **spectest-fix** - 自动修复测试用例中发现的问题
+8. **spectest-report** - 生成 `report.md` 执行摘要
+9. **spectest-archive** - 将完成的变更移至 `archive/`
 
 ### 技能触发方式
 

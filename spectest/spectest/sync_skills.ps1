@@ -123,3 +123,23 @@ if (Test-Path $TestflowSource) {
 } else {
     Write-Host "⚠️ 未找到 $TestflowSource，跳过 testflow 同步" -ForegroundColor Yellow
 }
+
+# ══════════════════════════════════════════════════════════
+# miniprogram 三件套同步（整目录：script-author / run / shared）
+# ══════════════════════════════════════════════════════════
+$MpSource = "E:\AI\skills\miniprogram"
+
+if (Test-Path $MpSource) {
+    foreach ($mpDir in @("miniprogram-script-author", "miniprogram-run", "miniprogram-shared")) {
+        $srcDir = Join-Path $MpSource $mpDir
+        $dstDir = Join-Path $TargetDir $mpDir
+        Write-Host "📦 处理: $mpDir" -ForegroundColor Cyan
+        if (-not (Test-Path $dstDir)) {
+            New-Item -ItemType Directory -Path $dstDir | Out-Null
+        }
+        Copy-Item -Path "$srcDir\*" -Destination $dstDir -Recurse -Force
+        Write-Host "  ✅ $mpDir 同步完成" -ForegroundColor Green
+    }
+} else {
+    Write-Host "⚠️ 未找到 $MpSource，跳过 miniprogram 同步" -ForegroundColor Yellow
+}

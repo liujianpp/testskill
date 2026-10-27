@@ -6,8 +6,6 @@ requires-python = ">=3.10"
 dependencies = [
     "openpyxl",
     "pymysql",
+    "pypdf>=4.0.0",
+    "python-docx>=1.0.0",
 ]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"

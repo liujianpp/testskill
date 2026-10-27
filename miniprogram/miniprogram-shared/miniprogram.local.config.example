@@ -1,0 +1,12 @@
+# 微信开发者工具与本仓库路径（复制为 miniprogram.local.config，勿提交 Git）
+# 路径相对于小程序自动化项目仓库根，或使用绝对路径
+
+# 小程序工程目录（必填，除非仅用 wsEndpoint 连接）
+projectPath=/path/to/your/miniprogram-project
+
+# 微信开发者工具 CLI（launch 模式必填）
+# macOS 示例：
+cliPath=/Applications/wechatwebdevtools.app/Contents/MacOS/cli
+
+# 可选：连接已打开的开发者工具（设置后优先于 launch）
+# wsEndpoint=ws://127.0.0.1:9420

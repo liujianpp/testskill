@@ -12,12 +12,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 | 目录 | 内容 |
 |------|------|
-| `spectest/` | SpecTest 统一测试工作流（9 个技能，8 步流程）。**内含自己的 CLAUDE.md**，改 spectest 技能前先读它（含 25 列 Excel 格式定义、数据库配置等细节） |
+| `spectest/` | SpecTest 统一测试工作流（10 个技能，9 步流程）。**内含自己的 CLAUDE.md**，改 spectest 技能前先读它（含 25 列 Excel 格式定义、数据库配置等细节） |
 | `ApiAutoTest2.0/` | API 自动化测试套件（6 个技能组成执行流水线） |
 | `browser-use-case-runner/` | Web UI 用例执行器（xlsx/MD/手动用例 → 有头 browser-use 逐条执行 → Markdown 报告） |
 | `browser-use/` | browser-use CLI 封装参考（`state`/`input`/`click`/`screenshot` 等命令契约；被 case-runner 依赖） |
 | `operation-manual/` | 网站操作手册生成（playwright-cli 浏览器探索 + 截图，默认有头模式） |
 | `prd-review/` | 测试视角需求评审（5 维度，支持 pdf/docx/md/txt） |
+| `miniprogram/` | 微信小程序 UI 自动化三件套（script-author 写 Jest 脚本 / run 执行回归 / shared 共享约定；miniprogram-automator + 微信开发者工具模拟器） |
+| `testflow/` | 测试全生命周期调度器（需求评审 → 用例设计 → 三支线执行 → 统一报告；自带 25列→runner 8列转换器与多源汇总器） |
 
 浏览器自动化有两个独立工具链，勿混用：`browser-use` CLI（daemon 常驻、按索引操作）用于 UI 测试；`playwright-cli`（snapshot ref e0/e1）用于操作手册生成。
 
@@ -90,11 +92,11 @@ powershell -ExecutionPolicy Bypass -File e:\AI\skills\spectest\spectest\sync_ski
 
 ### SpecTest（spectest/）— 测试用例设计工作流
 
-8 步顺序流程，状态存放在**目标项目**的 `spectest/changes/<name>/` 目录：
+9 步顺序流程（plan 可选），状态存放在**目标项目**的 `spectest/changes/<name>/` 目录：
 
-`new`（建目录 + proposal）→ `analysis`（requirements-analysis.md + feature_list.md + api_list.json）→ `points`（specs/*.md 测试点）→ `generate`（25 列标准 Excel / XMind）→ `review` → `fix` → `report` → `archive`
+`new`（建目录 + proposal）→ `analysis`（requirements-analysis.md + feature_list.md + api_list.json）→ `plan`（test-plan.md 测试计划，可选）→ `points`（specs/*.md 测试点）→ `generate`（先出 design.md 设计方案，再导出 25 列标准 Excel / XMind）→ `review` → `fix` → `report` → `archive`
 
-- generate 有三种输入源：`from-specs`（测试点转换）、`from-api`（OpenAPI 智能设计）、`from-feature`（功能清单智能设计）
+- generate 有三种输入源：`from-specs`（测试点转换，先生成 design.md 覆盖矩阵与提纲再展开）、`from-api`（OpenAPI 智能设计）、`from-feature`（功能清单智能设计）
 - 核心契约：所有用例走标准 25 列 Excel（列定义见 spectest/CLAUDE.md）；覆盖率目标 正向≥40%、负向≥30%、边界≥20%、安全≥10%
 
 ### ApiAutoTest2.0 — 接口测试执行流水线
@@ -119,3 +121,14 @@ powershell -ExecutionPolicy Bypass -File e:\AI\skills\spectest\spectest\sync_ski
 - **验证码三级兜底**：截图落盘 → 视觉 Agent 识别（须报置信度）→ 停止等人工回复；不得伪造通过或绕过风控
 - **留痕默认方式 1**：`videoRecording.enabled=false`，仅关键步骤 + 结论态 `screenshot` 到 `reports/screenshots/`；整屏 ffmpeg 录屏仅用户显式要求时走，且非 browser-use 内置能力
 - 每条用例由 Agent 阅读自然语言步骤后驱动浏览器（LLM 驱动，非脚本映射）；`state` 返回的元素索引会跨页变化，禁止硬编码复用旧索引
+
+### miniprogram（miniprogram/）— 微信小程序 UI 自动化
+
+三件套协作：`miniprogram-script-author`（读用例 → 模拟器采 WXML inspect → 逐条生成 Jest describe → 维护 suite.json，**不执行不下结论**）→ `miniprogram-run`（`run-with-reports.sh suite` 逐条执行 + 台账 + Session 报告）+ `miniprogram-shared`（conventions/selectors/脚手架模板）。
+
+- 核心契约：suite.json 是唯一编排源（一模块一文件、一条 TC 一个 describe，`--testNamePattern` 按 id 命中）；无 WXML inspect 依据禁止写选择器；截图必须 `miniProgram.screenshot`（Page 无此 API）
+- 报告：`reports/miniprogram-executions.md` 台账 + `miniprogram-report-<sessionId>.md/.html` + 伪 Trace（automator 不支持 Playwright video/trace.zip）
+
+### testflow（testflow/）— 全流程调度
+
+「地图 + 转换器 + 汇总器」，不含测试能力：prd-review → spectest → 三支线执行（3A ApiAutoTest2.0 接口 / 3B browser-use-case-runner Web UI / 3C miniprogram 小程序）→ `aggregate_reports.py` 统一报告（四源：25列 Excel / Allure / UI MD / miniprogram 报告）。3B 与 3C 共用转换器 `convert_25col_to_ui_xlsx.py`（输出 `ui_cases.xlsx` / `mp_cases.xlsx`，8 列格式对两条支线均兼容）。

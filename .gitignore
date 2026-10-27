@@ -23,3 +23,6 @@ __MACOSX/
 # IDE
 .idea/
 .vscode/
+
+# 小程序本地机器配置（含个人路径，勿提交）
+miniprogram.local.config

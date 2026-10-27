@@ -8,7 +8,8 @@ SCRIPTS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 from aggregate_reports import (build_report, main, read_allure_results,
-                               read_excel_rows, read_ui_results)
+                               read_excel_rows, read_mp_results,
+                               read_ui_results)
 
 HEADERS_25 = [
     "系统/项目", "模块", "功能", "测试项/测试点", "用例标题",
@@ -166,3 +167,79 @@ def test_main_cli_excel_default_derived(tmp_path, monkeypatch):
     rc = main(["--output", str(out)])
     assert rc == 0
     assert "推导行" in out.read_text(encoding="utf-8")
+
+
+# ── miniprogram 支线（3C）──
+
+MP_LEDGER_MD = (
+    "# 台账\n\n"
+    "## Session 20260916-100000\n\n"
+    "- **TC-MP-001** | PASS | exit=0 | spec=`miniprogram/tests/auth/auth.spec.js`\n"
+    "- **TC-MP-002** | FAIL | exit=1 | spec=`miniprogram/tests/auth/auth.spec.js`\n"
+    "\n"
+    "## Session 20260917-120000\n\n"
+    "- **TC-MP-001** | PASS | exit=0 | spec=`miniprogram/tests/auth/auth.spec.js`\n"
+    "- **TC-MP-002** | PASS | exit=0 | spec=`miniprogram/tests/auth/auth.spec.js`\n"
+    "- **TC-MP-003** | FAIL | exit=1 | spec=`miniprogram/tests/home/home.spec.js`\n"
+)
+
+MP_SESSION_MD = (
+    "# 小程序自动化测试报告\n\n"
+    "## 执行顺序\n\n"
+    "1. `miniprogram/tests/auth/auth.spec.js` — PASS\n"
+    "2. `miniprogram/tests/home/home.spec.js` — FAIL\n"
+    "3. `miniprogram/tests/profile/profile.spec.js` — NOT_RUN\n"
+)
+
+
+def test_read_mp_results_ledger(tmp_path):
+    """台账格式：取最后一个 Session 段，label 为用例 ID。"""
+    md = tmp_path / "miniprogram-executions.md"
+    md.write_text(MP_LEDGER_MD, encoding="utf-8")
+    rows = read_mp_results(str(md))
+    assert [(r["label"], r["result"]) for r in rows] == [
+        ("TC-MP-001", "PASS"),
+        ("TC-MP-002", "PASS"),
+        ("TC-MP-003", "FAIL"),
+    ]
+
+
+def test_read_mp_results_session_report(tmp_path):
+    """Session 批量报告格式：label 为 spec 路径，含 NOT_RUN（全角破折号）。"""
+    md = tmp_path / "miniprogram-report-20260917-120000.md"
+    md.write_text(MP_SESSION_MD, encoding="utf-8")
+    rows = read_mp_results(str(md))
+    assert [(r["result"]) for r in rows] == ["PASS", "FAIL", "NOT_RUN"]
+    assert rows[0]["label"] == "miniprogram/tests/auth/auth.spec.js"
+
+
+def test_build_report_with_mp_source(tmp_path):
+    mp_rows = [
+        {"label": "TC-MP-001", "result": "PASS"},
+        {"label": "TC-MP-002", "result": "FAIL"},
+        {"label": "TC-MP-003", "result": "NOT_RUN"},
+    ]
+    report = build_report([], [], [], mp_rows)
+    assert "小程序执行(miniprogram)" in report     # 总览行
+    assert "### 3.4 小程序执行（miniprogram）" in report
+    assert "TC-MP-002" in report                   # 失败用例 ID 出现在明细与风险
+    # NOT_RUN 计入待执行列；通过率 = 1/(1+1) = 50%
+    assert "| 小程序执行(miniprogram) | 3 | 1 | 1 | - | 1 | 50.0% |" in report
+    assert "小程序执行失败 1 条" in report
+    assert "小程序有 1 条未执行" in report
+
+
+def test_main_cli_mp_report(tmp_path, capsys):
+    excel = tmp_path / "tc.xlsx"
+    build_25col(excel, [
+        row_for(**{"用例标题": "通过行", "是否通过": "是", "关联需求ID": "REQ-1"}),
+    ])
+    mp = tmp_path / "miniprogram-executions.md"
+    mp.write_text(MP_LEDGER_MD, encoding="utf-8")
+    out = tmp_path / "unified.md"
+    rc = main(["--excel", str(excel), "--mp-report", str(mp), "--output", str(out)])
+    assert rc == 0
+    text = out.read_text(encoding="utf-8")
+    assert "小程序执行(miniprogram)" in text
+    assert "TC-MP-003" in text
+    assert "小程序: 3 条" in capsys.readouterr().out
