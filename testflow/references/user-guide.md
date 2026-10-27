@@ -111,7 +111,7 @@ Agent: ── 阶段4 统一报告 ──
 ### 阶段 4 · 统一报告
 
 - **你提供**：无需额外输入（若走了 3A/3C，确认 allure / 小程序报告路径）
-- **会发生**：汇总四源——25 列 Excel 执行结果列、Allure 结果、UI 执行报告、小程序执行报告 → 一份 `unified-report.md`，含四节：执行总览（通过率 = 通过/(通过+失败)，阻塞/未执行单列不进分母）/ 需求覆盖对照 / 四支线明细 / 风险与建议
+- **会发生**：汇总五源——25 列 Excel 执行结果列、Allure 结果、UI 执行报告、小程序执行报告、Playwright JSON 结果 → 一份 `unified-report.md`，含四节：执行总览（通过率 = 通过/(通过+失败)，阻塞/未执行单列不进分母）/ 需求覆盖对照 / 四支线明细 / 风险与建议
 - **产出**：`artifacts/unified-report.md`
 
 ### 阶段 5 · 归档（收尾）
@@ -192,4 +192,4 @@ Agent 会截图 → 尝试视觉识别（会告诉你置信度）→ 停下来�
 | miniprogram（三件套） | 阶段 3C 小程序执行（script-author 写脚本 + run 执行） | ✅ 按其 SKILL.md 独立使用 |
 | operation-manual | 阶段 5 可选手册 | ✅ `/operation-manual` |
 
-testflow 自身新增的只有三样：**调度文档**（SKILL.md + workflow-map.md）、**转换器**（25列→runner 8列，3B/3C 共用）、**汇总器**（四源→统一报告）。两条链路（需求驱动的 spectest、代码驱动的 ApiAutoTest）始终保持独立，仅在统一报告处汇合——不做用例级互转。
+testflow 自身新增的只有三样：**调度文档**（SKILL.md + workflow-map.md）、**转换器**（25列→runner 8列，3B/3C 共用）、**汇总器**（五源→统一报告：25列/Allure/UI/小程序/Playwright）。两条链路（需求驱动的 spectest、代码驱动的 ApiAutoTest）始终保持独立，仅在统一报告处汇合——不做用例级互转。

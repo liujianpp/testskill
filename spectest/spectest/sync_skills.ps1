@@ -143,3 +143,30 @@ if (Test-Path $MpSource) {
 } else {
     Write-Host "⚠️ 未找到 $MpSource，跳过 miniprogram 同步" -ForegroundColor Yellow
 }
+
+# ══════════════════════════════════════════════════════════
+# web-script-author 同步（references/templates 整目录 + SKILL.md）
+# ══════════════════════════════════════════════════════════
+$WsaSource = "E:\AI\skills\web-script-author"
+$WsaTarget = Join-Path $TargetDir "web-script-author"
+
+if (Test-Path $WsaSource) {
+    Write-Host "📦 处理: web-script-author" -ForegroundColor Cyan
+    if (-not (Test-Path $WsaTarget)) {
+        New-Item -ItemType Directory -Path $WsaTarget | Out-Null
+    }
+    foreach ($sub in @("references", "templates")) {
+        $srcSub = Join-Path $WsaSource $sub
+        $dstSub = Join-Path $WsaTarget $sub
+        if (Test-Path $srcSub) {
+            if (-not (Test-Path $dstSub)) { New-Item -ItemType Directory -Path $dstSub | Out-Null }
+            Copy-Item -Path "$srcSub\*" -Destination $dstSub -Recurse -Force
+            Write-Host "  ✓ $sub/ 已同步" -ForegroundColor Green
+        }
+    }
+    Copy-Item (Join-Path $WsaSource "SKILL.md") -Destination $WsaTarget -Force
+    Write-Host "  ✓ SKILL.md 已同步" -ForegroundColor Green
+    Write-Host "  ✅ web-script-author 同步完成" -ForegroundColor Green
+} else {
+    Write-Host "⚠️ 未找到 $WsaSource，跳过 web-script-author 同步" -ForegroundColor Yellow
+}

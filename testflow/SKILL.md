@@ -133,10 +133,11 @@ python <testflow-skill-dir>/scripts/aggregate_reports.py \
   [--allure-dir <当轮 allure-results 路径>] \
   [--ui-report <case-runner MD 报告路径>] \
   [--mp-report <miniprogram 台账或 Session 报告路径>] \
+  [--playwright-json <test-automation/web 的 playwright-results.json>] \
   --output artifacts/unified-report.md
 ```
 
-四源缺哪个跳过哪个。注意：`--ui-report` / `--mp-report` 路径不存在时该节静默跳过（报告显示「UI 报告未生成」/「小程序报告未生成」），不报错——若用户预期有该支线报告，应先核对路径再汇总。`--mp-report` 接受台账（`miniprogram-executions.md`，自动取最后一个 Session 段，label 为用例 ID）或 Session 批量报告（`miniprogram-report-<sessionId>.md`，含 NOT_RUN）。生成后向用户展示报告摘要（总览表 + 风险条目）。
+五源缺哪个跳过哪个。注意：`--ui-report` / `--mp-report` 路径不存在时该节静默跳过（报告显示「UI 报告未生成」/「小程序报告未生成」），不报错——若用户预期有该支线报告，应先核对路径再汇总。`--mp-report` 接受台账（`miniprogram-executions.md`，自动取最后一个 Session 段，label 为用例 ID）或 Session 批量报告（`miniprogram-report-<sessionId>.md`，含 NOT_RUN）。`--playwright-json` 对接测试资产库 web 层的 JSON 结果（label 为 spec 标题，web-script-author 约定含 `[CASE:<用例编号>]` 前缀）。生成后向用户展示报告摘要（总览表 + 风险条目）。
 
 ## Step 8：阶段5 归档
 

@@ -9,7 +9,7 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 
 from aggregate_reports import (build_report, main, read_allure_results,
                                read_excel_rows, read_mp_results,
-                               read_ui_results)
+                               read_playwright_results, read_ui_results)
 
 HEADERS_25 = [
     "系统/项目", "模块", "功能", "测试项/测试点", "用例标题",
@@ -243,3 +243,74 @@ def test_main_cli_mp_report(tmp_path, capsys):
     assert "小程序执行(miniprogram)" in text
     assert "TC-MP-003" in text
     assert "小程序: 3 条" in capsys.readouterr().out
+
+
+# ── Playwright JSON 源 ──────────────────────────────────────────────
+
+def _write_playwright_json(tmp_path, statuses):
+    """构造 Playwright JSON reporter 结构：suites→specs→tests→results。"""
+    tests = []
+    for title, status, msg in statuses:
+        tests.append({
+            "title": title, "ok": status in ("passed", "flaky"),
+            "tests": [{
+                "file": f"main/tests/{title[:6]}.spec.ts",
+                "results": [{"status": status, "error": {"message": msg} if msg else None}],
+            }],
+        })
+    data = {"suites": [{"title": "chromium", "suites": [], "specs": tests}]}
+    p = tmp_path / "playwright-results.json"
+    p.write_text(json.dumps(data), encoding="utf-8")
+    return str(p)
+
+
+def test_read_playwright_results(tmp_path):
+    p = _write_playwright_json(tmp_path, [
+        ("[CASE:TC-001] 登录成功", "passed", ""),
+        ("[CASE:TC-002] 密码错误", "failed", "TimeoutError: locator.click"),
+        ("[CASE:TC-003] 过期提示", "skipped", ""),
+        ("[CASE:TC-004] flaky用例", "flaky", "first attempt failed"),
+    ])
+    rows = read_playwright_results(p)
+    assert len(rows) == 4
+    by_label = {r["label"]: r for r in rows}
+    assert by_label["[CASE:TC-001] 登录成功"]["result"] == "PASS"
+    assert by_label["[CASE:TC-002] 密码错误"]["result"] == "FAIL"
+    assert "TimeoutError" in by_label["[CASE:TC-002] 密码错误"]["message"]
+    assert by_label["[CASE:TC-003] 过期提示"]["result"] == "NOT_RUN"
+    assert by_label["[CASE:TC-004] flaky用例"]["result"] == "PASS"
+    assert by_label["[CASE:TC-004] flaky用例"]["status"] == "flaky"
+
+
+def test_read_playwright_results_bad_file(tmp_path):
+    bad = tmp_path / "bad.json"
+    bad.write_text("{not json", encoding="utf-8")
+    assert read_playwright_results(str(bad)) == []
+
+
+def test_build_report_with_playwright_source(tmp_path):
+    p = _write_playwright_json(tmp_path, [
+        ("[CASE:TC-001] 登录成功", "passed", ""),
+        ("[CASE:TC-002] 密码错误", "failed", "expect failed"),
+    ])
+    rows = read_playwright_results(p)
+    report = build_report([], [], [], [], pw_rows=rows)
+    assert "界面自动化(Playwright)" in report
+    assert "| 界面自动化(Playwright) | 2 | 1 | 1 | - | 0 | 50.0% |" in report
+    assert "### 3.5 界面自动化（Playwright）" in report
+    assert "[CASE:TC-002] 密码错误" in report
+    assert "界面自动化失败 1 条" in report
+
+
+def test_main_cli_playwright_json(tmp_path, capsys):
+    wb = Workbook(); ws = wb.active; ws.title = "测试用例"
+    ws.append(["用例标题", "模块", "实际结果", "是否通过", "关联需求ID"])
+    ws.append(["冒烟", "登录", "", "", ""])
+    excel = tmp_path / "x_testcases.xlsx"; wb.save(excel)
+    p = _write_playwright_json(tmp_path, [("[CASE:TC-001] 登录成功", "passed", "")])
+    out = tmp_path / "unified-report.md"
+    rc = main(["--excel", str(excel), "--playwright-json", p, "--output", str(out)])
+    assert rc == 0
+    text = out.read_text(encoding="utf-8")
+    assert "界面自动化(Playwright)" in text
+    assert "Playwright: 1 条" in capsys.readouterr().out

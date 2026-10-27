@@ -6,11 +6,13 @@
     2. allure-results 目录    —— 接口自动化（*-result.json 的 status）
     3. case-runner MD 报告    —— UI 执行（RESULT: PASS|FAIL|BLOCKED 行）
     4. miniprogram 报告       —— 小程序支线（run-with-reports.sh 生成的台账或 Session 批量报告）
+    5. Playwright JSON 报告   —— 界面自动化（test-automation/web 的 playwright-results.json）
 
 用法:
     python aggregate_reports.py --excel artifacts/xx_testcases.xlsx \
         [--allure-dir allure-results] [--ui-report reports/case-run-x.md] \
         [--mp-report reports/miniprogram-executions.md] \
+        [--playwright-json reports/web/playwright-results.json] \
         [--output artifacts/unified-report.md]
 """
 import argparse
@@ -119,13 +121,59 @@ def read_mp_results(path: str) -> list[dict]:
     ]
 
 
+def read_playwright_results(path: str) -> list[dict]:
+    """解析 Playwright JSON reporter 输出（config 默认写到 reports/web/playwright-results.json）。
+
+    展开 suites→specs→tests，每条 test 取最后一次 attempt 归并为 PASS/FAIL/NOT_RUN：
+    passed/flaky→PASS（flaky 为重试后通过）；failed/timedOut/interrupted→FAIL；skipped→NOT_RUN。
+    label 取 spec 标题（web-script-author 约定为 `[CASE:<用例编号>] <用例标题>`）。
+    """
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return []
+
+    rows: list[dict] = []
+
+    def walk(suites, prefix):
+        for suite in suites or []:
+            title = str(suite.get("title") or "").strip()
+            next_prefix = f"{prefix} > {title}" if (prefix and title) else (prefix or title)
+            for spec in suite.get("specs") or []:
+                for t in spec.get("tests") or []:
+                    results = t.get("results") or []
+                    status = str(results[-1].get("status", "unknown")) if results else "unknown"
+                    if status in ("passed", "flaky"):
+                        verdict = "PASS"
+                    elif status in ("failed", "timedOut", "interrupted"):
+                        verdict = "FAIL"
+                    elif status == "skipped":
+                        verdict = "NOT_RUN"
+                    else:
+                        verdict = "FAIL"
+                    message = str((results[-1].get("error") or {}).get("message", "")) if results else ""
+                    rows.append({
+                        "result": verdict,
+                        "label": str(spec.get("title", "")).strip(),
+                        "file": str(t.get("file", "")),
+                        "status": status,
+                        "message": message.splitlines()[0] if message else "",
+                        "suite": next_prefix,
+                    })
+            walk(suite.get("suites"), next_prefix)
+
+    walk(data.get("suites"), "")
+    return rows
+
+
 def _rate(p: int, f: int) -> str:
     """通过率 = 通过/(通过+失败)，分母为 0 时显示 '-'。"""
     return f"{p / (p + f) * 100:.1f}%" if (p + f) else "-"
 
 
-def build_report(excel_rows, allure_rows, ui_rows, mp_rows=None) -> str:
+def build_report(excel_rows, allure_rows, ui_rows, mp_rows=None, pw_rows=None) -> str:
     mp_rows = mp_rows or []
+    pw_rows = pw_rows or []
 
     # ── 统计 ──
     manual_pass = sum(1 for r in excel_rows if r["is_passed"] is True)
@@ -143,6 +191,10 @@ def build_report(excel_rows, allure_rows, ui_rows, mp_rows=None) -> str:
     mp_fail = sum(1 for r in mp_rows if r["result"] == "FAIL")
     mp_not_run = sum(1 for r in mp_rows if r["result"] == "NOT_RUN")
 
+    pw_pass = sum(1 for r in pw_rows if r["result"] == "PASS")
+    pw_fail = sum(1 for r in pw_rows if r["result"] == "FAIL")
+    pw_not_run = sum(1 for r in pw_rows if r["result"] == "NOT_RUN")
+
     lines = ["# 测试统一报告", "", "## 1. 执行总览", ""]
     lines.append("| 来源 | 用例数 | 通过 | 失败 | 阻塞 | 待执行 | 通过率 |")
     lines.append("|---|---|---|---|---|---|---|")
@@ -150,6 +202,7 @@ def build_report(excel_rows, allure_rows, ui_rows, mp_rows=None) -> str:
     lines.append(f"| 接口自动化(Allure) | {len(allure_rows)} | {allure_pass} | {allure_fail} | - | - | {_rate(allure_pass, allure_fail)} |")
     lines.append(f"| UI执行(case-runner) | {len(ui_rows)} | {ui_pass} | {ui_fail} | {ui_blocked} | - | {_rate(ui_pass, ui_fail)} |")
     lines.append(f"| 小程序执行(miniprogram) | {len(mp_rows)} | {mp_pass} | {mp_fail} | - | {mp_not_run} | {_rate(mp_pass, mp_fail)} |")
+    lines.append(f"| 界面自动化(Playwright) | {len(pw_rows)} | {pw_pass} | {pw_fail} | - | {pw_not_run} | {_rate(pw_pass, pw_fail)} |")
     lines.append("")
     lines.append("> 通过率 = 通过/(通过+失败)；阻塞/未执行单列不计入分母。")
     lines.append("")
@@ -213,6 +266,24 @@ def build_report(excel_rows, allure_rows, ui_rows, mp_rows=None) -> str:
             lines.append(f"- {r['result']}：{r['label']}")
     lines.append("")
 
+    lines += ["### 3.5 界面自动化（Playwright）", ""]
+    if not pw_rows:
+        lines.append("（Playwright 报告未生成）")
+    else:
+        flaky = [r for r in pw_rows if r.get("status") == "flaky"]
+        lines.append(f"共 {len(pw_rows)} 条，失败 {pw_fail} 条"
+                     + (f"，其中重试后通过(flaky) {len(flaky)} 条" if flaky else "")
+                     + "。明细：")
+        lines.append("")
+        lines.append("| 结果 | 用例 | 文件 | 说明 |")
+        lines.append("|---|---|---|---|")
+        for r in pw_rows:
+            note = r.get("message") or ""
+            if r.get("status") == "flaky":
+                note = f"flaky（重试通过）{('：' + note) if note else ''}"
+            lines.append(f"| {r['result']} | {r['label'] or '-'} | {Path(r.get('file', '')).name or '-'} | {note or '-'} |")
+    lines.append("")
+
     # ── 风险与建议 ──
     lines += ["## 4. 风险与建议", ""]
     risks = []
@@ -229,6 +300,12 @@ def build_report(excel_rows, allure_rows, ui_rows, mp_rows=None) -> str:
         risks.append(f"- 小程序执行失败 {mp_fail} 条：{', '.join(labels[:10])}{'…' if len(labels) > 10 else ''}（详见 trace viewer 与 artifacts）")
     if mp_not_run:
         risks.append(f"- 小程序有 {mp_not_run} 条未执行（STOP_ON_FAIL 停跑或 --from 续跑场景，可用 suite --from 续跑）")
+    if pw_fail:
+        labels = [r["label"] for r in pw_rows if r["result"] == "FAIL" and r["label"]]
+        risks.append(f"- 界面自动化失败 {pw_fail} 条：{', '.join(labels[:10])}{'…' if len(labels) > 10 else ''}（详见 Playwright HTML 报告）")
+    flaky_n = sum(1 for r in pw_rows if r.get("status") == "flaky")
+    if flaky_n:
+        risks.append(f"- 界面自动化有 {flaky_n} 条 flaky（重试后通过），建议排查稳定性")
     weak = [k for k, g in reqs.items() if k != "（未关联）" and all(not r["executed"] or r["is_passed"] is False for r in g)]
     if weak:
         risks.append(f"- 覆盖薄弱需求（无用例通过）：{', '.join(sorted(weak))}")
@@ -246,6 +323,8 @@ def main(argv=None) -> int:
     ap.add_argument("--ui-report", default=None, help="case-runner MD 报告路径（缺省则跳过该节）")
     ap.add_argument("--mp-report", default=None,
                     help="miniprogram 报告路径（台账 miniprogram-executions.md 或 Session 批量报告；缺省则跳过该节）")
+    ap.add_argument("--playwright-json", default=None,
+                    help="Playwright JSON 结果路径（test-automation/web 的 playwright-results.json；缺省则跳过该节）")
     ap.add_argument("--output", default=None, help="输出路径（默认: Excel 同目录 unified-report.md）")
     args = ap.parse_args(argv)
 
@@ -264,14 +343,16 @@ def main(argv=None) -> int:
     allure_rows = read_allure_results(args.allure_dir) if args.allure_dir else []
     ui_rows = read_ui_results(args.ui_report) if args.ui_report and Path(args.ui_report).exists() else []
     mp_rows = read_mp_results(args.mp_report) if args.mp_report and Path(args.mp_report).exists() else []
+    pw_rows = (read_playwright_results(args.playwright_json)
+               if args.playwright_json and Path(args.playwright_json).exists() else [])
 
-    report = build_report(excel_rows, allure_rows, ui_rows, mp_rows)
+    report = build_report(excel_rows, allure_rows, ui_rows, mp_rows, pw_rows)
 
     # 注意：output 默认依赖 args.excel 的 parent，必须在 excel 推导之后计算
     output = args.output or str(Path(args.excel).parent / "unified-report.md")
     Path(output).write_text(report, encoding="utf-8")
     print(f"统一报告已生成: {output}")
-    print(f"  人工用例: {len(excel_rows)} 行 | Allure: {len(allure_rows)} 条 | UI: {len(ui_rows)} 条 | 小程序: {len(mp_rows)} 条")
+    print(f"  人工用例: {len(excel_rows)} 行 | Allure: {len(allure_rows)} 条 | UI: {len(ui_rows)} 条 | 小程序: {len(mp_rows)} 条 | Playwright: {len(pw_rows)} 条")
     return 0
 
 

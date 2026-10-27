@@ -20,6 +20,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `prd-review/` | 测试视角需求评审（5 维度，支持 pdf/docx/md/txt） |
 | `miniprogram/` | 微信小程序 UI 自动化三件套（script-author 写 Jest 脚本 / run 执行回归 / shared 共享约定；miniprogram-automator + 微信开发者工具模拟器） |
 | `testflow/` | 测试全生命周期调度器（需求评审 → 用例设计 → 三支线执行 → 统一报告；自带 25列→runner 8列转换器与多源汇总器） |
+| `web-script-author/` | 界面脚本生成（25 列 UI 用例 → Playwright spec，采真实 selector 不臆造，不执行不下结论；产物落测试资产库 `E:\AI\test-automation\web\`，主干/迭代目录见该库 README） |
 
 浏览器自动化有两个独立工具链，勿混用：`browser-use` CLI（daemon 常驻、按索引操作）用于 UI 测试；`playwright-cli`（snapshot ref e0/e1）用于操作手册生成。
 
@@ -131,4 +132,4 @@ powershell -ExecutionPolicy Bypass -File e:\AI\skills\spectest\spectest\sync_ski
 
 ### testflow（testflow/）— 全流程调度
 
-「地图 + 转换器 + 汇总器」，不含测试能力：prd-review → spectest → 三支线执行（3A ApiAutoTest2.0 接口 / 3B browser-use-case-runner Web UI / 3C miniprogram 小程序）→ `aggregate_reports.py` 统一报告（四源：25列 Excel / Allure / UI MD / miniprogram 报告）。3B 与 3C 共用转换器 `convert_25col_to_ui_xlsx.py`（输出 `ui_cases.xlsx` / `mp_cases.xlsx`，8 列格式对两条支线均兼容）。
+「地图 + 转换器 + 汇总器」，不含测试能力：prd-review → spectest → 三支线执行（3A ApiAutoTest2.0 接口 / 3B browser-use-case-runner Web UI / 3C miniprogram 小程序）→ `aggregate_reports.py` 统一报告（五源：25列 Excel / Allure / UI MD / miniprogram 报告 / Playwright JSON）。3B 与 3C 共用转换器 `convert_25col_to_ui_xlsx.py`（输出 `ui_cases.xlsx` / `mp_cases.xlsx`，8 列格式对两条支线均兼容）。
