@@ -20,7 +20,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `prd-review/` | 测试视角需求评审（5 维度，支持 pdf/docx/md/txt） |
 | `miniprogram/` | 微信小程序 UI 自动化三件套（script-author 写 Jest 脚本 / run 执行回归 / shared 共享约定；miniprogram-automator + 微信开发者工具模拟器） |
 | `testflow/` | 测试全生命周期调度器（需求评审 → 用例设计 → 三支线执行 → 统一报告；自带 25列→runner 8列转换器与多源汇总器） |
-| `web-script-author/` | 界面脚本生成（25 列 UI 用例 → Playwright spec，采真实 selector 不臆造，不执行不下结论；产物落测试资产库 `E:\AI\test-automation\web\`，主干/迭代目录见该库 README） |
+| `web-script-author/` | 界面脚本生成（25 列 UI 用例 → Playwright spec，采真实 selector 不臆造，不执行不下结论；产物落测试资产库 `test-automation/web/`（技能仓库内），主干/迭代目录见 test-automation/README） |
+| `test-automation/` | 测试资产库（用例库 cases/ + 接口 pytest api/ + 界面 Playwright web/ + 小程序约定；**主干 main / 迭代 iterations** 目录即身份，分拣 `promote_cases.py`、晋级 `promote_iteration.py`；CI 在仓库根 `.github/workflows/regression.yml`） |
 
 浏览器自动化有两个独立工具链，勿混用：`browser-use` CLI（daemon 常驻、按索引操作）用于 UI 测试；`playwright-cli`（snapshot ref e0/e1）用于操作手册生成。
 

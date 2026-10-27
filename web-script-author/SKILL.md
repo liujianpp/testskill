@@ -7,7 +7,7 @@ description: Web 界面脚本生成 - 读取 25 列测试用例，采集真实�
 
 ## 职责
 
-读取 25 列标准用例中的 **UI/功能用例**（「API URL」列为空），在**真实被测页面**采集 selector 后，逐条生成 Playwright spec，落位到测试资产库（默认 `E:\AI\test-automation\web\`）。**只生成与维护脚本，不执行、不下结论**——执行交给 `npx playwright test` / CI，结论只认其运行结果。
+读取 25 列标准用例中的 **UI/功能用例**（「API URL」列为空），在**真实被测页面**采集 selector 后，逐条生成 Playwright spec，落位到测试资产库（默认本仓库 `test-automation/web/`）。**只生成与维护脚本，不执行、不下结论**——执行交给 `npx playwright test` / CI，结论只认其运行结果。
 
 对齐 [../miniprogram/miniprogram-script-author/SKILL.md](../miniprogram/miniprogram-script-author/SKILL.md) 的范式：无 selector 依据不写定位器；suite/manifest 可追溯；不越权执行。
 

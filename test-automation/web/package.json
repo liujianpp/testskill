@@ -1,0 +1,14 @@
+{
+  "name": "test-automation-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "界面自动化（Playwright）：main=主干回归，iterations/<版本>=迭代新增",
+  "scripts": {
+    "test": "playwright test",
+    "test:main": "playwright test main",
+    "report": "playwright show-report ../reports/web/playwright-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.0"
+  }
+}

@@ -1,0 +1,58 @@
+name: 主干回归（api + web）
+
+on:
+  schedule:
+    - cron: '17 2 * * *'   # 每日 02:17（避开整点），仅 main 分支
+  workflow_dispatch:        # 支持手动触发
+    inputs:
+      scope:
+        description: '范围（main=仅主干，all=含迭代）'
+        default: 'main'
+
+jobs:
+  api-main:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: test-automation/api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - run: pytest main
+        env:
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+
+  web-main:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: test-automation/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test ${{ github.event.inputs.scope == 'all' && '' || 'main' }}
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          WEB_USERNAME: ${{ secrets.WEB_USERNAME }}
+          WEB_PASSWORD: ${{ secrets.WEB_PASSWORD }}
+      - name: 归档报告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-report
+          path: |
+            test-automation/reports/web/
+            test-automation/web/test-results/
+          if-no-files-found: ignore
+
+# 说明：
+# - 测试资产库位于本仓库 test-automation/（主干 main / 迭代 iterations 约定见其 README）
+# - secrets（API_BASE_URL / BASE_URL / WEB_USERNAME / WEB_PASSWORD）在仓库 Settings 配置，禁止写死
