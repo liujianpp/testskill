@@ -6,21 +6,21 @@ Claude Code Agent Skills 开发工作区，聚焦**测试领域全生命周期**
 
 ## 目录总览
 
-| 目录 | 定位 |
-|------|------|
-| [spectest/](spectest/) | **SpecTest 统一测试工作流**（10 技能、9 步流程：new → analysis → plan → points → generate → review → fix → report → archive），产出 25 列标准 Excel / XMind。内含自己的 CLAUDE.md（25 列格式定义、数据库配置） |
-| [ApiAutoTest2.0/](ApiAutoTest2.0/) | **接口自动化流水线**（6 技能）：接口文档扫描 → 场景生成 → 用例生成（cases.json/xlsx）→ pytest 执行 + Allure 报告 → 报告服务 |
-| [browser-use-case-runner/](browser-use-case-runner/) | **Web UI 用例执行器**：xlsx / MD / 手动用例 → 有头 browser-use 逐条执行 → Markdown 报告（PASS/FAIL/BLOCKED） |
-| [miniprogram/](miniprogram/) | **微信小程序 UI 自动化三件套**：script-author 写 Jest 脚本 / run 执行回归 / shared 共享约定（miniprogram-automator + 开发者工具模拟器） |
-| [testflow/](testflow/) | **全流程调度器**：需求评审 → 用例设计 → 三支线执行 → 统一报告汇总（五源：25 列 Excel / Allure / UI MD / miniprogram / Playwright JSON） |
-| [web-script-author/](web-script-author/) | **界面脚本生成**：25 列 UI 用例 → Playwright spec（采真实 selector，不执行不下结论），产物落 `test-automation/web/` |
-| [test-automation/](test-automation/) | **测试资产库**：用例库 cases/ + 接口 pytest + 界面 Playwright + 小程序约定；主干 `main/` × 迭代 `iterations/`，目录即身份；CI 见仓库根 `.github/workflows/regression.yml` |
-| [prd-review/](prd-review/) | 测试视角需求评审（可测性 / 边界异常 / 场景状态 / 数据环境 / 阻塞点，支持 pdf/docx/md/txt） |
-| [operation-manual/](operation-manual/) | 网站操作手册生成（playwright-cli 浏览器探索 + 截图，默认有头模式） |
-| [browser-use/](browser-use/) | browser-use CLI 封装参考（`state`/`input`/`click`/`screenshot` 命令契约；被 case-runner 依赖） |
-| [testerarmy-e2e/](testerarmy-e2e/) | 基于开源 [tester-army/e2e](https://github.com/tester-army/e2e) 的五技能 E2E 套件（init → explore-draft → run → fix → report） |
-| [opentest1.0.5/](opentest1.0.5/)、[playwright-cli-testcase1.0.1/](playwright-cli-testcase1.0.1/)、[playwright-midscene-skills/](playwright-midscene-skills/) | 历史参考方案（各含「使用说明 + 原文」），OpenTest/Testcase 早期技能已归档至 `spectest/archive/`，不再维护 |
-| [docs/](docs/) | 实践计划等文档 |
+| 目录                                                                                                                                                      | 定位                                                                                                                                                                                                                         |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [spectest/](spectest/)                                                                                                                                     | **SpecTest 统一测试工作流**（10 技能、9 步流程：new → analysis → plan → points → generate → review → fix → report → archive），产出 25 列标准 Excel / XMind。内含自己的 CLAUDE.md（25 列格式定义、数据库配置） |
+| [ApiAutoTest2.0/](ApiAutoTest2.0/)                                                                                                                         | **接口自动化流水线**（6 技能）：接口文档扫描 → 场景生成 → 用例生成（cases.json/xlsx）→ pytest 执行 + Allure 报告 → 报告服务                                                                                        |
+| [browser-use-case-runner/](browser-use-case-runner/)                                                                                                       | **Web UI 用例执行器**：xlsx / MD / 手动用例 → 有头 browser-use 逐条执行 → Markdown 报告（PASS/FAIL/BLOCKED）                                                                                                         |
+| [miniprogram/](miniprogram/)                                                                                                                               | **微信小程序 UI 自动化三件套**：script-author 写 Jest 脚本 / run 执行回归 / shared 共享约定（miniprogram-automator + 开发者工具模拟器）                                                                                |
+| [testflow/](testflow/)                                                                                                                                     | **全流程调度器**：需求评审 → 用例设计 → 三支线执行 → 统一报告汇总（五源：25 列 Excel / Allure / UI MD / miniprogram / Playwright JSON）                                                                             |
+| [web-script-author/](web-script-author/)                                                                                                                   | **界面脚本生成**：25 列 UI 用例 → Playwright spec（采真实 selector，不执行不下结论），产物落 `test-automation/web/`                                                                                                 |
+| [test-automation/](test-automation/)                                                                                                                       | **测试资产库**：用例库 cases/ + 接口 pytest + 界面 Playwright + 小程序约定；主干 `main/` × 迭代 `iterations/`，目录即身份；CI 见仓库根 `.github/workflows/regression.yml`                                       |
+| [prd-review/](prd-review/)                                                                                                                                 | 测试视角需求评审（可测性 / 边界异常 / 场景状态 / 数据环境 / 阻塞点，支持 pdf/docx/md/txt）                                                                                                                                   |
+| [operation-manual/](operation-manual/)                                                                                                                     | 网站操作手册生成（playwright-cli 浏览器探索 + 截图，默认有头模式）                                                                                                                                                           |
+| [browser-use/](browser-use/)                                                                                                                               | browser-use CLI 封装参考（`state`/`input`/`click`/`screenshot` 命令契约；被 case-runner 依赖）                                                                                                                       |
+| [testerarmy-e2e/](testerarmy-e2e/)                                                                                                                         | 基于开源 [tester-army/e2e](https://github.com/tester-army/e2e) 的五技能 E2E 套件（init → explore-draft → run → fix → report）                                                                                             |
+| [opentest1.0.5/](opentest1.0.5/)、[playwright-cli-testcase1.0.1/](playwright-cli-testcase1.0.1/)、[playwright-midscene-skills/](playwright-midscene-skills/) | 历史参考方案（各含「使用说明 + 原文」），OpenTest/Testcase 早期技能已归档至 `spectest/archive/`，不再维护                                                                                                                  |
+| [docs/](docs/)                                                                                                                                             | 实践计划等文档                                                                                                                                                                                                               |
 
 各主要技能目录均有 `使用说明.md` 可直接查阅。
 

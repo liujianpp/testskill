@@ -134,3 +134,13 @@ powershell -ExecutionPolicy Bypass -File e:\AI\skills\spectest\spectest\sync_ski
 ### testflow（testflow/）— 全流程调度
 
 「地图 + 转换器 + 汇总器」，不含测试能力：prd-review → spectest → 三支线执行（3A ApiAutoTest2.0 接口 / 3B browser-use-case-runner Web UI / 3C miniprogram 小程序）→ `aggregate_reports.py` 统一报告（五源：25列 Excel / Allure / UI MD / miniprogram 报告 / Playwright JSON）。3B 与 3C 共用转换器 `convert_25col_to_ui_xlsx.py`（输出 `ui_cases.xlsx` / `mp_cases.xlsx`，8 列格式对两条支线均兼容）。
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+Rules:
+- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
