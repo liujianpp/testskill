@@ -16,7 +16,7 @@
 | 遇到问题 | 先查本页 [§6 FAQ](#6-常见问题-faq速查版详见各分册)，再查对应分册 |
 | 想看术语解释 | 本页 [§7 小白术语表](#7-小白术语表) |
 
-## 1. 文档目录（17 册）
+## 1. 文档目录（18 册）
 
 | 分册 | 内容 | 适合什么时候看 |
 |---|---|---|
@@ -37,6 +37,7 @@
 | [14-技能详解-playwright-cli-testcase-探索式用例生成](14-技能详解-playwright-cli-testcase-探索式用例生成.md) | 探索式用例生成（1 技能）：给网址就探索界面出用例（10 列 Excel/XMind） | 没有需求文档、想对照真实界面出用例 |
 | [15-技能详解-playwright-midscene-混合UI自动化](15-技能详解-playwright-midscene-混合UI自动化.md) | Playwright+Midscene 代码化 UI 自动化 **4 个技能**（难定位元素有视觉兜底，可进 CI） | 界面含 Canvas/Shadow DOM/验证码、要进 CI |
 | [16-技能详解-opentest-用例设计工作流](16-技能详解-opentest-用例设计工作流.md) | OpenTest 1.0.5（spectest 前身，**7 个技能**，遗留项目维护用） | 维护旧 opentest 项目、了解演化 |
+| [17-技能详解-seed-test-data-测试造数](17-技能详解-seed-test-data-测试造数.md) | 测试造数：接口文档/HAR/curl/表结构 → Postman/SQL(含回滚)/Excel/Python 造数文件 | 执行前准备测试数据时 |
 
 ---
 
@@ -44,7 +45,7 @@
 
 ### 2.1 一句话介绍
 
-这是一个 **「AI 测试技能仓库」**：把测试人员的完整工作流（需求评审 → 设计用例 → 执行测试 → 出报告 → 沉淀资产）做成了 **30 个主线 AI 技能**（分属 10 个套件），外加 **12 个可选/历史套件技能**（playwright-cli-testcase、playwright-midscene 四件套、opentest 七件套，见 14～16 册），交给 Claude Code 这个 AI 助手自动完成。
+这是一个 **「AI 测试技能仓库」**：把测试人员的完整工作流（需求评审 → 设计用例 → 造数 → 执行测试 → 出报告 → 沉淀资产）做成了 **30 个主线 AI 技能**（分属 10 个套件）+ **1 个造数技能（seed-test-data）**，外加 **12 个可选/历史套件技能**（playwright-cli-testcase、playwright-midscene 四件套、opentest 七件套，见 14～16 册），交给 Claude Code 这个 AI 助手自动完成。
 
 ### 2.2 三个基础概念
 
@@ -89,7 +90,7 @@
 
 ## 3. 技能全家福（所有技能一张表）
 
-> 共 **30 个主线在用技能**（10 套件）+ **12 个可选/历史套件技能**（14～16 册详解）。详细用法点对应分册。
+> 共 **30 个主线在用技能**（10 套件）+ **1 个独立造数技能**（[17 册](17-技能详解-seed-test-data-测试造数.md)）+ **12 个可选/历史套件技能**（14～16 册详解）。详细用法点对应分册。
 
 ### 3.1 核心流程套件（12 个技能）
 
@@ -124,7 +125,7 @@
 | 22 | `miniprogram-run` | miniprogram | 逐条执行 spec + 台账 + Session 报告（结论只认它） | [06](06-技能详解-miniprogram-小程序自动化.md) |
 | 23 | `miniprogram-shared` | miniprogram | 共享约定层（选择器铁律/脚手架/模板，幕后支撑） | [06](06-技能详解-miniprogram-小程序自动化.md) |
 
-### 3.3 资产生成与独立工具（7 个技能）
+### 3.3 资产生成与独立工具（8 个技能）
 
 | # | 技能 | 所属套件 | 一句话职责 | 分册 |
 |---|------|---------|-----------|------|
@@ -135,6 +136,7 @@
 | 28 | `e2e-run` | testerarmy-e2e | 执行指定测试文件，出 MD+HTML 报告 | [09](09-技能详解-testerarmy-e2e-探索式E2E.md) |
 | 29 | `e2e-fix` | testerarmy-e2e | 按失败报告修复脚本与定位器（同一失败点最多 2 轮） | [09](09-技能详解-testerarmy-e2e-探索式E2E.md) |
 | 30 | `e2e-report` | testerarmy-e2e | 从 report.json 生成 MD + 单文件 HTML 报告 | [09](09-技能详解-testerarmy-e2e-探索式E2E.md) |
+| 31 | `seed-test-data` | 独立 | 测试造数：接口文档/HAR/curl/表结构 → Postman / SQL(含回滚) / Excel / Python 造数文件；只出文件不执行 | [17](17-技能详解-seed-test-data-测试造数.md) |
 
 ### 3.4 非技能成员（但很重要）
 
@@ -186,6 +188,7 @@ E:\AI\skills\
 ├── miniprogram\                   # 小程序三件套
 ├── web-script-author\             # 界面脚本生成
 ├── operation-manual\              # 操作手册生成
+├── seed-test-data\                # 测试造数（17 册）
 ├── testerarmy-e2e\                # 探索式 E2E 五件套
 ├── test-automation\               # 测试资产库（CI 在仓库根 .github/workflows/）
 │
@@ -214,6 +217,7 @@ E:\AI\skills\
 | 没有需求文档，只有网址 | 从真实界面探索出用例 | playwright-cli-testcase | 「探索 https://… 出测试点计划，确认后导 Excel」 | 14 |
 | 界面有 Canvas/验证码，又要进 CI | 代码化 UI 自动化 | playwright-midscene 四件套 | 「@00-playwright-explore-plan …」 | 15 |
 | 维护遗留 opentest 项目 | 按原流程继续 | opentest 7 技能 | 「新建 OpenTest 测试工作，被测对象…」 | 16 |
+| 执行前要准备测试数据 | 造数文件（Postman/SQL/Excel/Python） | seed-test-data | 「根据 docs/api-docs.md 造一套数据，正常+异常，要 Postman 和 Excel」 | 17 |
 | 想试 AI 自主探索 E2E | 探索式测试 | testerarmy-e2e | 「初始化 e2e，引擎 Web，厂商 DeepSeek」 | 09 |
 | 本次迭代做完 | 用例/脚本入库 | test-automation 脚本 | 「分拣入库，版本 2026Q4-xx」 | 10 |
 | 迭代上线 | 资产晋级主干 | promote_iteration.py | 「把 2026Q4-xx 晋级」 | 10 |
